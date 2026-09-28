@@ -1,7 +1,7 @@
-lucide.createIcons();
+﻿lucide.createIcons();
 
 const RECAPTCHA_SITE_KEY = '6LeaN9QtAAAAAK9JhDr5-mPwB26VghVpk-wmYrq0';
-const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzUhOtqiNofsFX5pJJVjbuC7roHCMDmrZN6HuNfQngC9Uu6P-Qjn4FOw1vDcSzWSnDD/exec';
+const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyp1qXmvyq-Ev3hNO5f9kUPoZK9vXGj__Ij3q5sHLpHhWY0gU4dDLa98K5Wx1eJuYC3/exec';
 
 window.renderRecaptchas = function renderRecaptchas() {
     if (!window.grecaptcha) return;
@@ -32,7 +32,7 @@ function validateCaptcha(form) {
     if (!captcha) return true;
 
     if (!window.grecaptcha) {
-        showFormMessage(form, 'error', 'Капча еще загружается', 'Подождите пару секунд и попробуйте снова.');
+        showFormMessage(form, 'error', 'РљР°РїС‡Р° РµС‰Рµ Р·Р°РіСЂСѓР¶Р°РµС‚СЃСЏ', 'РџРѕРґРѕР¶РґРёС‚Рµ РїР°СЂСѓ СЃРµРєСѓРЅРґ Рё РїРѕРїСЂРѕР±СѓР№С‚Рµ СЃРЅРѕРІР°.');
         return false;
     }
 
@@ -44,7 +44,7 @@ function validateCaptcha(form) {
     const token = window.grecaptcha.getResponse(widgetId);
     if (token) return true;
 
-    showFormMessage(form, 'error', 'Подтвердите действие', 'Поставьте галочку «Я не робот», чтобы отправить заявку.');
+    showFormMessage(form, 'error', 'РџРѕРґС‚РІРµСЂРґРёС‚Рµ РґРµР№СЃС‚РІРёРµ', 'РџРѕСЃС‚Р°РІСЊС‚Рµ РіР°Р»РѕС‡РєСѓ В«РЇ РЅРµ СЂРѕР±РѕС‚В», С‡С‚РѕР±С‹ РѕС‚РїСЂР°РІРёС‚СЊ Р·Р°СЏРІРєСѓ.');
     return false;
 }
 
@@ -85,24 +85,24 @@ function saveTrafficSource() {
         referrerHost = '';
     }
 
-    let trafficSource = 'Прямой заход';
+    let trafficSource = 'РџСЂСЏРјРѕР№ Р·Р°С…РѕРґ';
 
     if (utmSource.includes('vk') || params.has('vkclid')) {
-        trafficSource = 'VK Реклама';
+        trafficSource = 'VK Р РµРєР»Р°РјР°';
     } else if (utmSource.includes('yandex') || utmSource.includes('ya') || params.has('yclid') || params.has('ymclid')) {
-        trafficSource = 'Яндекс Реклама';
+        trafficSource = 'РЇРЅРґРµРєСЃ Р РµРєР»Р°РјР°';
     } else if (utmSource.includes('google')) {
-        trafficSource = 'Google Реклама';
+        trafficSource = 'Google Р РµРєР»Р°РјР°';
     } else if (utmSource) {
-        trafficSource = 'Реклама: ' + utmSource;
+        trafficSource = 'Р РµРєР»Р°РјР°: ' + utmSource;
     } else if (referrerHost.includes('vk.com') || referrerHost.includes('vk.ru')) {
         trafficSource = 'VK';
     } else if (referrerHost.includes('yandex.')) {
-        trafficSource = 'Яндекс Поиск';
+        trafficSource = 'РЇРЅРґРµРєСЃ РџРѕРёСЃРє';
     } else if (referrerHost.includes('google.')) {
-        trafficSource = 'Google Поиск';
+        trafficSource = 'Google РџРѕРёСЃРє';
     } else if (referrerHost) {
-        trafficSource = 'Другой сайт: ' + referrerHost;
+        trafficSource = 'Р”СЂСѓРіРѕР№ СЃР°Р№С‚: ' + referrerHost;
     }
 
     sessionStorage.setItem('trafficSource', trafficSource);
@@ -198,14 +198,14 @@ function markInvalidField(field) {
 function validateLeadForm(form) {
     const phone = form.querySelector('input[type="tel"]');
     if (phone && !isValidPhone(phone.value)) {
-        showFormMessage(form, 'error', 'Проверьте телефон', 'Укажите полный номер телефона, чтобы координатор мог связаться с вами.');
+        showFormMessage(form, 'error', 'РџСЂРѕРІРµСЂСЊС‚Рµ С‚РµР»РµС„РѕРЅ', 'РЈРєР°Р¶РёС‚Рµ РїРѕР»РЅС‹Р№ РЅРѕРјРµСЂ С‚РµР»РµС„РѕРЅР°, С‡С‚РѕР±С‹ РєРѕРѕСЂРґРёРЅР°С‚РѕСЂ РјРѕРі СЃРІСЏР·Р°С‚СЊСЃСЏ СЃ РІР°РјРё.');
         markInvalidField(phone);
         return false;
     }
 
     const date = form.querySelector('.date-input');
     if (date && date.value.trim() && !isValidDateText(date.value.trim())) {
-        showFormMessage(form, 'error', 'Проверьте дату рождения', 'Введите дату в формате дд.мм.гггг, например 18.01.2001.');
+        showFormMessage(form, 'error', 'РџСЂРѕРІРµСЂСЊС‚Рµ РґР°С‚Сѓ СЂРѕР¶РґРµРЅРёСЏ', 'Р’РІРµРґРёС‚Рµ РґР°С‚Сѓ РІ С„РѕСЂРјР°С‚Рµ РґРґ.РјРј.РіРіРіРі, РЅР°РїСЂРёРјРµСЂ 18.01.2001.');
         markInvalidField(date);
         return false;
     }
@@ -214,26 +214,26 @@ function validateLeadForm(form) {
 
     for (const field of requiredFields) {
         if (field.type === 'checkbox' && !field.checked) {
-            showFormMessage(form, 'error', 'Заполните обязательные поля', 'Подтвердите согласие, чтобы отправить заявку.');
+            showFormMessage(form, 'error', 'Р—Р°РїРѕР»РЅРёС‚Рµ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїРѕР»СЏ', 'РџРѕРґС‚РІРµСЂРґРёС‚Рµ СЃРѕРіР»Р°СЃРёРµ, С‡С‚РѕР±С‹ РѕС‚РїСЂР°РІРёС‚СЊ Р·Р°СЏРІРєСѓ.');
             markInvalidField(field);
             return false;
         }
 
         if (field.tagName === 'SELECT' && !field.value.trim()) {
-            showFormMessage(form, 'error', 'Заполните обязательные поля', 'Выберите вакансию из списка.');
+            showFormMessage(form, 'error', 'Р—Р°РїРѕР»РЅРёС‚Рµ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїРѕР»СЏ', 'Р’С‹Р±РµСЂРёС‚Рµ РІР°РєР°РЅСЃРёСЋ РёР· СЃРїРёСЃРєР°.');
             markInvalidField(field);
             return false;
         }
 
         if (field.type !== 'checkbox' && !field.value.trim()) {
-            showFormMessage(form, 'error', 'Заполните обязательные поля', 'Заполните все обязательные поля формы.');
+            showFormMessage(form, 'error', 'Р—Р°РїРѕР»РЅРёС‚Рµ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїРѕР»СЏ', 'Р—Р°РїРѕР»РЅРёС‚Рµ РІСЃРµ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїРѕР»СЏ С„РѕСЂРјС‹.');
             markInvalidField(field);
             return false;
         }
     }
 
     if (date && !isValidDateText(date.value.trim())) {
-        showFormMessage(form, 'error', 'Проверьте дату рождения', 'Введите дату в формате дд.мм.гггг, например 18.01.2001.');
+        showFormMessage(form, 'error', 'РџСЂРѕРІРµСЂСЊС‚Рµ РґР°С‚Сѓ СЂРѕР¶РґРµРЅРёСЏ', 'Р’РІРµРґРёС‚Рµ РґР°С‚Сѓ РІ С„РѕСЂРјР°С‚Рµ РґРґ.РјРј.РіРіРіРі, РЅР°РїСЂРёРјРµСЂ 18.01.2001.');
         markInvalidField(date);
         return false;
     }
@@ -267,21 +267,21 @@ function collectLeadData(form, source) {
         phone: getFieldValue(form, 'input[type="tel"]'),
         name: inputs[0] ? inputs[0].value.trim() : '',
         vacancy: getFieldValue(form, '#modal-job-input') || (inputs[2] ? inputs[2].value.trim() : ''),
-        city: getFieldValue(form, 'input[placeholder="Ваш город"]'),
+        city: getFieldValue(form, 'input[placeholder="Р’Р°С€ РіРѕСЂРѕРґ"]'),
         age: calculateAge(dateValue),
-        trafficSource: getStoredTrafficSource() || 'Прямой заход',
+        trafficSource: getStoredTrafficSource() || 'РџСЂСЏРјРѕР№ Р·Р°С…РѕРґ',
         source,
     };
 }
 
 async function submitLead(form, source) {
     if (!GOOGLE_SHEETS_ENDPOINT) {
-        throw new Error('Не подключен URL Google Apps Script для отправки заявок.');
+        throw new Error('РќРµ РїРѕРґРєР»СЋС‡РµРЅ URL Google Apps Script РґР»СЏ РѕС‚РїСЂР°РІРєРё Р·Р°СЏРІРѕРє.');
     }
 
     const payload = collectLeadData(form, source);
     if (!isValidPhone(payload.phone)) {
-        throw new Error('Укажите корректный номер телефона.');
+        throw new Error('РЈРєР°Р¶РёС‚Рµ РєРѕСЂСЂРµРєС‚РЅС‹Р№ РЅРѕРјРµСЂ С‚РµР»РµС„РѕРЅР°.');
     }
 
     await fetch(GOOGLE_SHEETS_ENDPOINT, {
@@ -344,18 +344,18 @@ function toggleMobileMenu() {
     document.getElementById('mobile-menu').classList.toggle('hidden');
 }
 
-function openModal(title = 'Заказать звонок') {
+function openModal(title = 'Р—Р°РєР°Р·Р°С‚СЊ Р·РІРѕРЅРѕРє') {
     document.getElementById('modal-backdrop').classList.remove('hidden');
     document.getElementById('modal-title').textContent = title;
-    document.getElementById('modal-job-input').value = 'Индивидуальный подбор';
+    document.getElementById('modal-job-input').value = 'РРЅРґРёРІРёРґСѓР°Р»СЊРЅС‹Р№ РїРѕРґР±РѕСЂ';
     document.getElementById('modal-calc-data').value = '';
     window.renderRecaptchas();
 }
 
 function openModalWithPrefill(jobTitle, salary) {
     document.getElementById('modal-backdrop').classList.remove('hidden');
-    document.getElementById('modal-title').textContent = 'Отклик: ' + jobTitle;
-    document.getElementById('modal-subtitle').textContent = 'Ставка: ' + salary + '. Координатор свяжется для согласования билетов.';
+    document.getElementById('modal-title').textContent = 'РћС‚РєР»РёРє: ' + jobTitle;
+    document.getElementById('modal-subtitle').textContent = 'РЎС‚Р°РІРєР°: ' + salary + '. РљРѕРѕСЂРґРёРЅР°С‚РѕСЂ СЃРІСЏР¶РµС‚СЃСЏ РґР»СЏ СЃРѕРіР»Р°СЃРѕРІР°РЅРёСЏ Р±РёР»РµС‚РѕРІ.';
     document.getElementById('modal-job-input').value = jobTitle;
     document.getElementById('modal-calc-data').value = salary;
     window.renderRecaptchas();
@@ -383,10 +383,10 @@ function updateCalculator() {
     const days = daysMap[sliderVal];
 
     const ratePerMonth = parseInt(document.getElementById('calc-prof').value, 10);
-    document.getElementById('days-val').textContent = days + ' дней';
+    document.getElementById('days-val').textContent = days + ' РґРЅРµР№';
 
     const total = Math.round((ratePerMonth / 30) * days);
-    document.getElementById('total-income').textContent = total.toLocaleString('ru-RU') + ' ₽';
+    document.getElementById('total-income').textContent = total.toLocaleString('ru-RU') + ' в‚Ѕ';
 }
 
 function handleCalcApply() {
@@ -400,14 +400,14 @@ function handleCalcApply() {
     const total = document.getElementById('total-income').textContent;
 
     document.getElementById('modal-backdrop').classList.remove('hidden');
-    document.getElementById('modal-title').textContent = 'Бронирование ставки: ' + total;
-    document.getElementById('modal-subtitle').textContent = 'Расчет на вахту ' + days + ' дней (' + profName + ').';
+    document.getElementById('modal-title').textContent = 'Р‘СЂРѕРЅРёСЂРѕРІР°РЅРёРµ СЃС‚Р°РІРєРё: ' + total;
+    document.getElementById('modal-subtitle').textContent = 'Р Р°СЃС‡РµС‚ РЅР° РІР°С…С‚Сѓ ' + days + ' РґРЅРµР№ (' + profName + ').';
     document.getElementById('modal-job-input').value = profName;
-    document.getElementById('modal-calc-data').value = 'Вахта: ' + days + ' дн., Расчет: ' + total;
+    document.getElementById('modal-calc-data').value = 'Р’Р°С…С‚Р°: ' + days + ' РґРЅ., Р Р°СЃС‡РµС‚: ' + total;
     window.renderRecaptchas();
 }
 
-async function handleFormSubmit(e, source = 'Главный экран') {
+async function handleFormSubmit(e, source = 'Р“Р»Р°РІРЅС‹Р№ СЌРєСЂР°РЅ') {
     e.preventDefault();
     const form = e.target;
     clearFormMessage(form);
@@ -415,15 +415,15 @@ async function handleFormSubmit(e, source = 'Главный экран') {
     if (!validateCaptcha(form)) return;
     try {
         setFormPending(form, true);
-        showFormMessage(form, 'pending', 'Отправляем заявку', 'Подождите несколько секунд, данные передаются координатору.');
+        showFormMessage(form, 'pending', 'РћС‚РїСЂР°РІР»СЏРµРј Р·Р°СЏРІРєСѓ', 'РџРѕРґРѕР¶РґРёС‚Рµ РЅРµСЃРєРѕР»СЊРєРѕ СЃРµРєСѓРЅРґ, РґР°РЅРЅС‹Рµ РїРµСЂРµРґР°СЋС‚СЃСЏ РєРѕРѕСЂРґРёРЅР°С‚РѕСЂСѓ.');
         await submitLead(form, source);
-        showFormMessage(form, 'success', 'Заявка принята', 'Данные переданы координатору. Мы свяжемся с вами в ближайшее время.');
+        showFormMessage(form, 'success', 'Р—Р°СЏРІРєР° РїСЂРёРЅСЏС‚Р°', 'Р”Р°РЅРЅС‹Рµ РїРµСЂРµРґР°РЅС‹ РєРѕРѕСЂРґРёРЅР°С‚РѕСЂСѓ. РњС‹ СЃРІСЏР¶РµРјСЃСЏ СЃ РІР°РјРё РІ Р±Р»РёР¶Р°Р№С€РµРµ РІСЂРµРјСЏ.');
         trackLeadGoals('lead_hero');
         form.reset();
         resetCaptcha(form);
         setupPhoneInputs();
     } catch (error) {
-        showFormMessage(form, 'error', 'Заявка не отправлена', error.message || 'Проверьте поля и попробуйте еще раз.');
+        showFormMessage(form, 'error', 'Р—Р°СЏРІРєР° РЅРµ РѕС‚РїСЂР°РІР»РµРЅР°', error.message || 'РџСЂРѕРІРµСЂСЊС‚Рµ РїРѕР»СЏ Рё РїРѕРїСЂРѕР±СѓР№С‚Рµ РµС‰Рµ СЂР°Р·.');
     } finally {
         setFormPending(form, false);
     }
@@ -437,15 +437,15 @@ async function handleBottomFormSubmit(e) {
     if (!validateCaptcha(form)) return;
     try {
         setFormPending(form, true);
-        showFormMessage(form, 'pending', 'Отправляем заявку', 'Подождите несколько секунд, данные передаются координатору.');
-        await submitLead(form, 'Анкета кандидата');
-        showFormMessage(form, 'success', 'Анкета зарегистрирована', 'Координатор свяжется с вами в ближайшее время.');
+        showFormMessage(form, 'pending', 'РћС‚РїСЂР°РІР»СЏРµРј Р·Р°СЏРІРєСѓ', 'РџРѕРґРѕР¶РґРёС‚Рµ РЅРµСЃРєРѕР»СЊРєРѕ СЃРµРєСѓРЅРґ, РґР°РЅРЅС‹Рµ РїРµСЂРµРґР°СЋС‚СЃСЏ РєРѕРѕСЂРґРёРЅР°С‚РѕСЂСѓ.');
+        await submitLead(form, 'РђРЅРєРµС‚Р° РєР°РЅРґРёРґР°С‚Р°');
+        showFormMessage(form, 'success', 'РђРЅРєРµС‚Р° Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅР°', 'РљРѕРѕСЂРґРёРЅР°С‚РѕСЂ СЃРІСЏР¶РµС‚СЃСЏ СЃ РІР°РјРё РІ Р±Р»РёР¶Р°Р№С€РµРµ РІСЂРµРјСЏ.');
         trackLeadGoals('lead_bottom');
         form.reset();
         resetCaptcha(form);
         setupPhoneInputs();
     } catch (error) {
-        showFormMessage(form, 'error', 'Анкета не отправлена', error.message || 'Проверьте поля и попробуйте еще раз.');
+        showFormMessage(form, 'error', 'РђРЅРєРµС‚Р° РЅРµ РѕС‚РїСЂР°РІР»РµРЅР°', error.message || 'РџСЂРѕРІРµСЂСЊС‚Рµ РїРѕР»СЏ Рё РїРѕРїСЂРѕР±СѓР№С‚Рµ РµС‰Рµ СЂР°Р·.');
     } finally {
         setFormPending(form, false);
     }
@@ -459,16 +459,17 @@ async function handleModalSubmit(e) {
     if (!validateCaptcha(form)) return;
     try {
         setFormPending(form, true);
-        showFormMessage(form, 'pending', 'Отправляем анкету', 'Подождите несколько секунд, данные передаются координатору.');
-        await submitLead(form, 'Модальное окно');
-        showFormMessage(form, 'success', 'Анкета отправлена', 'Мы свяжемся с вами в течение рабочего дня.');
+        showFormMessage(form, 'pending', 'РћС‚РїСЂР°РІР»СЏРµРј Р°РЅРєРµС‚Сѓ', 'РџРѕРґРѕР¶РґРёС‚Рµ РЅРµСЃРєРѕР»СЊРєРѕ СЃРµРєСѓРЅРґ, РґР°РЅРЅС‹Рµ РїРµСЂРµРґР°СЋС‚СЃСЏ РєРѕРѕСЂРґРёРЅР°С‚РѕСЂСѓ.');
+        await submitLead(form, 'РњРѕРґР°Р»СЊРЅРѕРµ РѕРєРЅРѕ');
+        showFormMessage(form, 'success', 'РђРЅРєРµС‚Р° РѕС‚РїСЂР°РІР»РµРЅР°', 'РњС‹ СЃРІСЏР¶РµРјСЃСЏ СЃ РІР°РјРё РІ С‚РµС‡РµРЅРёРµ СЂР°Р±РѕС‡РµРіРѕ РґРЅСЏ.');
         trackLeadGoals('lead_modal');
         form.reset();
         resetCaptcha(form);
         setupPhoneInputs();
     } catch (error) {
-        showFormMessage(form, 'error', 'Анкета не отправлена', error.message || 'Проверьте поля и попробуйте еще раз.');
+        showFormMessage(form, 'error', 'РђРЅРєРµС‚Р° РЅРµ РѕС‚РїСЂР°РІР»РµРЅР°', error.message || 'РџСЂРѕРІРµСЂСЊС‚Рµ РїРѕР»СЏ Рё РїРѕРїСЂРѕР±СѓР№С‚Рµ РµС‰Рµ СЂР°Р·.');
     } finally {
         setFormPending(form, false);
     }
 }
+
