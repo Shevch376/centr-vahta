@@ -107,6 +107,32 @@ body { font-family: 'Inter', sans-serif; }
     background: #eef2f7;
 }
 
+.vacancy-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 2;
+    max-width: calc(100% - 2rem);
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    color: #fff;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(226, 232, 240, 0.28);
+    box-shadow: 0 0.5rem 1.25rem rgba(15, 23, 42, 0.24);
+    backdrop-filter: blur(8px);
+    font-size: 0.75rem;
+    font-weight: 800;
+    line-height: 1.1;
+    white-space: normal;
+}
+
+.vacancy-badge-accent {
+    color: #111827;
+    background: #f59e0b;
+    border-color: rgba(251, 191, 36, 0.65);
+    text-transform: uppercase;
+}
+
 .recaptcha-box {
     display: flex;
     justify-content: center;
@@ -114,9 +140,61 @@ body { font-family: 'Inter', sans-serif; }
     overflow: hidden;
 }
 
-@media (max-width: 380px) {
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+@media (max-width: 640px) {
+    #hero {
+        overflow-x: hidden;
+    }
+
+    #hero .grid,
+    #hero .grid > * {
+        min-width: 0;
+    }
+
+    #hero h1 {
+        max-width: 100%;
+        font-size: clamp(1.78rem, 8.9vw, 2.25rem) !important;
+        line-height: 1.02 !important;
+        overflow-wrap: normal;
+    }
+
+    #hero .inline-flex {
+        max-width: 100%;
+        align-items: flex-start;
+        white-space: normal;
+        font-size: 0.8rem;
+        line-height: 1.2;
+    }
+
+    #hero .inline-block {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    #hero .inline-block p {
+        font-size: clamp(1.45rem, 7.2vw, 1.95rem) !important;
+        line-height: 1.15 !important;
+        overflow-wrap: normal;
+        text-wrap: balance;
+    }
+
+    #hero select {
+        width: 100%;
+        min-width: 0;
+        text-overflow: ellipsis;
+    }
+
     .recaptcha-box {
-        transform: scale(.88);
+        justify-content: flex-start;
+        min-height: 72px;
+        transform: scale(.86);
         transform-origin: left center;
         width: 304px;
     }
