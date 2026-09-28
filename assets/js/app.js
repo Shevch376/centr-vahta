@@ -135,6 +135,18 @@ function trackYandexGoal(goalName) {
     window.ym(113130698, 'reachGoal', goalName);
 }
 
+function trackVkGoal(goalName) {
+    window._tmr = window._tmr || [];
+    window._tmr.push({ id: '3797789', type: 'reachGoal', goal: goalName });
+}
+
+function trackLeadGoals(goalName) {
+    trackYandexGoal('lead_submit');
+    trackYandexGoal(goalName);
+    trackVkGoal('lead_submit');
+    trackVkGoal(goalName);
+}
+
 function collectLeadData(form, source) {
     const inputs = form.querySelectorAll('input:not([type="hidden"]):not([type="checkbox"]):not([type="range"]), select');
     const dateValue = getFieldValue(form, '.date-input');
@@ -293,8 +305,7 @@ async function handleFormSubmit(e, source = 'Главный экран') {
         showFormMessage(form, 'pending', 'Отправляем заявку', 'Подождите несколько секунд, данные передаются координатору.');
         await submitLead(form, source);
         showFormMessage(form, 'success', 'Заявка принята', 'Данные переданы координатору. Мы свяжемся с вами в ближайшее время.');
-        trackYandexGoal('lead_submit');
-        trackYandexGoal('lead_hero');
+        trackLeadGoals('lead_hero');
         form.reset();
         resetCaptcha(form);
         setupPhoneInputs();
@@ -315,8 +326,7 @@ async function handleBottomFormSubmit(e) {
         showFormMessage(form, 'pending', 'Отправляем заявку', 'Подождите несколько секунд, данные передаются координатору.');
         await submitLead(form, 'Анкета кандидата');
         showFormMessage(form, 'success', 'Анкета зарегистрирована', 'Координатор свяжется с вами в ближайшее время.');
-        trackYandexGoal('lead_submit');
-        trackYandexGoal('lead_bottom');
+        trackLeadGoals('lead_bottom');
         form.reset();
         resetCaptcha(form);
         setupPhoneInputs();
@@ -337,8 +347,7 @@ async function handleModalSubmit(e) {
         showFormMessage(form, 'pending', 'Отправляем анкету', 'Подождите несколько секунд, данные передаются координатору.');
         await submitLead(form, 'Модальное окно');
         showFormMessage(form, 'success', 'Анкета отправлена', 'Мы свяжемся с вами в течение рабочего дня.');
-        trackYandexGoal('lead_submit');
-        trackYandexGoal('lead_modal');
+        trackLeadGoals('lead_modal');
         form.reset();
         resetCaptcha(form);
         setupPhoneInputs();
