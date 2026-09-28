@@ -130,6 +130,75 @@ function isValidPhone(value) {
     return digits.length >= 11 && digits.length <= 12;
 }
 
+function isValidDateText(value) {
+    const match = value.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+    if (!match) return false;
+
+    const day = Number(match[1]);
+    const month = Number(match[2]);
+    const year = Number(match[3]);
+    const date = new Date(year, month - 1, day);
+
+    return date.getFullYear() === year
+        && date.getMonth() === month - 1
+        && date.getDate() === day
+        && year >= 1940
+        && year <= new Date().getFullYear();
+}
+
+function markInvalidField(field) {
+    if (!field) return;
+    field.focus({ preventScroll: false });
+    field.classList.add('border-red-400');
+    window.setTimeout(() => field.classList.remove('border-red-400'), 1800);
+}
+
+function validateLeadForm(form) {
+    const phone = form.querySelector('input[type="tel"]');
+    if (phone && !isValidPhone(phone.value)) {
+        showFormMessage(form, 'error', 'Проверьте телефон', 'Укажите полный номер телефона, чтобы координатор мог связаться с вами.');
+        markInvalidField(phone);
+        return false;
+    }
+
+    const date = form.querySelector('.date-input');
+    if (date && date.value.trim() && !isValidDateText(date.value.trim())) {
+        showFormMessage(form, 'error', 'Проверьте дату рождения', 'Введите дату в формате дд.мм.гггг, например 18.01.2001.');
+        markInvalidField(date);
+        return false;
+    }
+
+    const requiredFields = Array.from(form.querySelectorAll('input[required], select[required]'));
+
+    for (const field of requiredFields) {
+        if (field.type === 'checkbox' && !field.checked) {
+            showFormMessage(form, 'error', 'Заполните обязательные поля', 'Подтвердите согласие, чтобы отправить заявку.');
+            markInvalidField(field);
+            return false;
+        }
+
+        if (field.tagName === 'SELECT' && !field.value.trim()) {
+            showFormMessage(form, 'error', 'Заполните обязательные поля', 'Выберите вакансию из списка.');
+            markInvalidField(field);
+            return false;
+        }
+
+        if (field.type !== 'checkbox' && !field.value.trim()) {
+            showFormMessage(form, 'error', 'Заполните обязательные поля', 'Заполните все обязательные поля формы.');
+            markInvalidField(field);
+            return false;
+        }
+    }
+
+    if (date && !isValidDateText(date.value.trim())) {
+        showFormMessage(form, 'error', 'Проверьте дату рождения', 'Введите дату в формате дд.мм.гггг, например 18.01.2001.');
+        markInvalidField(date);
+        return false;
+    }
+
+    return true;
+}
+
 function trackYandexGoal(goalName) {
     if (typeof window.ym !== 'function') return;
     window.ym(113130698, 'reachGoal', goalName);
@@ -299,6 +368,7 @@ async function handleFormSubmit(e, source = 'Главный экран') {
     e.preventDefault();
     const form = e.target;
     clearFormMessage(form);
+    if (!validateLeadForm(form)) return;
     if (!validateCaptcha(form)) return;
     try {
         setFormPending(form, true);
@@ -320,6 +390,7 @@ async function handleBottomFormSubmit(e) {
     e.preventDefault();
     const form = e.target;
     clearFormMessage(form);
+    if (!validateLeadForm(form)) return;
     if (!validateCaptcha(form)) return;
     try {
         setFormPending(form, true);
@@ -341,6 +412,7 @@ async function handleModalSubmit(e) {
     e.preventDefault();
     const form = e.target;
     clearFormMessage(form);
+    if (!validateLeadForm(form)) return;
     if (!validateCaptcha(form)) return;
     try {
         setFormPending(form, true);
