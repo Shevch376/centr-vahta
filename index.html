@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Центр координации вахтового персонала — Вакансии с бесплатным проездом и жильем</title>
+    
+    <!-- Фирменные шрифты: Oswald (монолитные заголовки) + Inter (читаемый текст) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        graphite: {
+                            900: '#0F172A',
+                            950: '#0A0F1D',
+                        },
+                        navy: {
+                            800: '#1E3A8A',
+                            900: '#172554',
+                            950: '#090E1A',
+                        },
+                        brand: {
+                            blue: '#1d4ed8',
+                            accent: '#F59E0B',
+                            accentHover: '#D97706',
+                            formBlue: '#1668c7',
+                            ctaPink: '#FF0055',
+                            ctaPinkHover: '#E0004C',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Oswald', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-heading { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.02em; }
+        .hero-pattern {
+            background-image: radial-gradient(rgba(37, 99, 235, 0.18) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-accent selection:text-slate-950">
+
+    <!-- ШАПКА САЙТА (БЕЗ ТЕЛЕФОНА — ВСЯ АНАЛИТИКА ЧЕРЕЗ ФОРМЫ) -->
+    <header class="sticky top-0 z-40 bg-graphite-950/95 backdrop-blur-md border-b border-slate-800 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <div class="flex items-center space-x-3">
+                <div class="w-11 h-11 bg-brand-blue border border-blue-400/40 rounded-xl flex items-center justify-center font-heading text-2xl text-white font-bold shadow-lg shadow-blue-600/30">
+                    КЦ
+                </div>
+                <div>
+                    <span class="font-heading text-xl sm:text-2xl font-bold tracking-wider block text-white leading-none">КАДРОВЫЙ ЦЕНТР</span>
+                    <span class="text-[11px] font-semibold text-blue-300 tracking-wider block mt-0.5">КООРДИНАЦИЯ ВАХТОВОГО ПЕРСОНАЛА</span>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-300">
+                <a href="#vacancies" class="hover:text-amber-400 transition-colors">Вакансии</a>
+                <a href="#calculator" class="hover:text-amber-400 transition-colors">Калькулятор</a>
+                <a href="#steps" class="hover:text-amber-400 transition-colors">Порядок выезда</a>
+                <a href="#guarantees" class="hover:text-amber-400 transition-colors">Гарантии</a>
+                <a href="#apply-bottom" class="hover:text-amber-400 transition-colors">Анкета</a>
+            </nav>
+
+            <div class="hidden sm:block">
+                <button onclick="openModal('Заказ обратного звонка')" class="bg-brand-accent hover:bg-brand-accentHover text-slate-950 font-heading text-base px-6 py-2.5 rounded-xl transition-all shadow-md font-bold">
+                    Заказать звонок
+                </button>
+            </div>
+
+            <button onclick="toggleMobileMenu()" class="md:hidden text-slate-300 hover:text-white" aria-label="Меню">
+                <i data-lucide="menu" class="w-7 h-7"></i>
+            </button>
+        </div>
+
+        <!-- Выпадающее меню для мобильных -->
+        <div id="mobile-menu" class="hidden md:hidden bg-graphite-900 border-b border-slate-800 px-4 pt-3 pb-6 space-y-3 text-center">
+            <a href="#vacancies" onclick="toggleMobileMenu()" class="block py-2 text-slate-200 font-medium">Вакансии</a>
+            <a href="#calculator" onclick="toggleMobileMenu()" class="block py-2 text-slate-200 font-medium">Калькулятор дохода</a>
+            <a href="#steps" onclick="toggleMobileMenu()" class="block py-2 text-slate-200 font-medium">Порядок выезда</a>
+            <a href="#guarantees" onclick="toggleMobileMenu()" class="block py-2 text-slate-200 font-medium">Гарантии</a>
+            <a href="#apply-bottom" onclick="toggleMobileMenu()" class="block py-2 text-amber-400 font-medium">Заполнить анкету</a>
+            <div class="pt-2">
+                <button onclick="openModal('Быстрый звонок'); toggleMobileMenu();" class="w-full bg-brand-accent text-slate-950 font-heading font-bold py-3 rounded-lg text-center">
+                    Заказать звонок
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ПЕРВЫЙ ЭКРАН (HERO) -->
+    <section class="relative bg-graphite-950 text-white overflow-hidden py-14 lg:py-20 hero-pattern border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-navy-800/90 border border-blue-500/40 text-blue-200 text-xs sm:text-sm font-semibold">
+                        <i data-lucide="badge-check" class="w-4 h-4 text-emerald-400"></i>
+                        <span>Официальное трудоустройство • Проезд и жилье за счет предприятий</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h1 class="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight">
+                            РАБОТА ВАХТОВЫМ МЕТОДОМ НА ОБЪЕКТАХ 2026
+                        </h1>
+                        <div class="inline-block bg-gradient-to-r from-navy-800 to-blue-900 border-l-4 border-brand-accent px-5 py-3 rounded-r-xl shadow-lg">
+                            <p class="font-heading text-2xl sm:text-3xl text-white">
+                                Доход от <span class="text-amber-400 font-bold">210 000</span> до <span class="text-amber-400 font-bold">270 000 ₽</span> / мес
+                            </p>
+                        </div>
+                    </div>
+
+                    <p class="text-slate-300 text-base leading-relaxed">
+                        Централизованный подбор квалифицированных рабочих специалистов на крупные строительные, транспортные и инфраструктурные объекты РФ. Все услуги по сопровождению соискателей бесплатны (оплачиваются предприятиями-заказчиками).
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-slate-200">
+                        <div class="flex items-center space-x-3 bg-graphite-900/80 p-3 rounded-xl border border-slate-800">
+                            <i data-lucide="plane" class="w-5 h-5 text-emerald-400 shrink-0"></i>
+                            <span class="text-sm font-medium">Бесплатные билеты из вашего города</span>
+                        </div>
+                        <div class="flex items-center space-x-3 bg-graphite-900/80 p-3 rounded-xl border border-slate-800">
+                            <i data-lucide="home" class="w-5 h-5 text-emerald-400 shrink-0"></i>
+                            <span class="text-sm font-medium">Проживание в модульных городках</span>
+                        </div>
+                        <div class="flex items-center space-x-3 bg-graphite-900/80 p-3 rounded-xl border border-slate-800">
+                            <i data-lucide="utensils" class="w-5 h-5 text-emerald-400 shrink-0"></i>
+                            <span class="text-sm font-medium">Горячее питание или суточные</span>
+                        </div>
+                        <div class="flex items-center space-x-3 bg-graphite-900/80 p-3 rounded-xl border border-slate-800">
+                            <i data-lucide="shield" class="w-5 h-5 text-emerald-400 shrink-0"></i>
+                            <span class="text-sm font-medium">Спецодежда и СИЗ по сезону</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5">
+                    <div class="bg-graphite-900 border border-slate-700 rounded-2xl p-6 sm:p-8 shadow-2xl relative">
+                        <h3 class="font-heading text-2xl text-white mb-1">Быстрый подбор вакансии</h3>
+                        <p class="text-xs text-slate-400 mb-5">Заполните форму, и координатор свяжется с вами для согласования даты выезда.</p>
+
+                        <form onsubmit="handleFormSubmit(event, 'Главный экран')" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Ваше имя</label>
+                                <input type="text" required placeholder="Константин" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand-accent transition-colors">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Номер телефона</label>
+                                <input type="tel" required placeholder="+7 (___) ___-__-__" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand-accent transition-colors">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Специальность</label>
+                                <select class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent transition-colors">
+                                    <option>Водитель самосвала / спецтехники (B, C, E)</option>
+                                    <option>Электрик / Водитель-электрик</option>
+                                    <option>Сварщик / Водитель-сварщик</option>
+                                    <option>Автомеханик / Слесарь</option>
+                                    <option>Сотрудник службы охраны / КПП</option>
+                                    <option>Разнорабочий / Другая профессия</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="w-full bg-brand-accent hover:bg-brand-accentHover text-slate-950 font-heading text-lg font-bold py-3.5 px-6 rounded-lg transition-all shadow-lg flex items-center justify-center space-x-2">
+                                <span>Подобрать объект</span>
+                                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                            </button>
+
+                            <p class="text-[10px] text-slate-500 text-center leading-normal">
+                                Нажимая кнопку, вы соглашаетесь на обработку персональных данных и звонок в соответствии с ФЗ-152 РФ.
+                            </p>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- КАТАЛОГ ВАКАНСИЙ С ФИЛЬТРАМИ -->
+    <section id="vacancies" class="py-16 bg-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-10">
+                <h2 class="font-heading text-3xl sm:text-4xl text-slate-900">Открытые специальности</h2>
+                <p class="mt-3 text-slate-600 text-sm sm:text-base">Все вакансии включают полный социальный пакет, бесплатные билеты и благоустроенное жилье.</p>
+            </div>
+
+            <!-- Фильтр-табы -->
+            <div class="flex flex-wrap justify-center gap-2 mb-10">
+                <button onclick="filterVacancies('all')" class="filter-btn active px-5 py-2 rounded-full text-xs sm:text-sm font-semibold bg-brand-blue text-white shadow-sm transition-all">Все специальности</button>
+                <button onclick="filterVacancies('driver')" class="filter-btn px-5 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white text-slate-700 hover:bg-slate-200 transition-all border border-slate-300">Водители</button>
+                <button onclick="filterVacancies('electric')" class="filter-btn px-5 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white text-slate-700 hover:bg-slate-200 transition-all border border-slate-300">Электрики & Сварщики</button>
+                <button onclick="filterVacancies('mechanic')" class="filter-btn px-5 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white text-slate-700 hover:bg-slate-200 transition-all border border-slate-300">Автомеханики</button>
+                <button onclick="filterVacancies('guard')" class="filter-btn px-5 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white text-slate-700 hover:bg-slate-200 transition-all border border-slate-300">Охрана</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- 1. Водители -->
+                <div class="vacancy-card driver bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all border border-slate-200 overflow-hidden flex flex-col justify-between group">
+                    <div>
+                        <div class="relative h-48 bg-slate-800 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=800&q=80" alt="Водитель" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                            <span class="absolute top-4 left-4 bg-graphite-950/90 text-white text-xs font-bold px-3 py-1 rounded-full border border-slate-700">Категории B, C, E</span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-heading text-xl text-slate-900 mb-2">Водители самосвала и спецтехники</h3>
+                            <p class="font-heading text-2xl text-brand-blue font-bold mb-4">от 210 000 ₽ <span class="text-xs font-normal text-slate-500 lowercase font-sans">/ мес</span></p>
+                            <ul class="space-y-2 text-xs sm:text-sm text-slate-600">
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500 shrink-0"></i> Перевозка грузов на объектах строительства</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500 shrink-0"></i> Автопарк: KAMAZ, SHACMAN (2022–2025 г.в.)</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500 shrink-0"></i> Вахта: 45/15 или 60/30</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <button onclick="openModalWithPrefill('Водитель самосвала (B, C, E)', '210 000 ₽/мес')" class="w-full bg-navy-800 hover:bg-brand-blue text-white font-heading font-semibold py-3 rounded-xl transition-colors">
+                            Откликнуться на вакансию
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. Электрики -->
+                <div class="vacancy-card electric bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all border border-slate-200 overflow-hidden flex flex-col justify-between group">
+                    <div>
+                        <div class="relative h-48 bg-slate-800 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=800&q=80" alt="Электрик" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                            <span class="absolute top-4 left-4 bg-graphite-950/90 text-white text-xs font-bold px-3 py-1 rounded-full border border-slate-700">Разряд 4–6</span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-heading text-xl text-slate-900 mb-2">Электрики / Водители-электрики</h3>
+                            <p class="font-heading text-2xl text-brand-blue font-bold mb-4">от 210 000 ₽ <span class="text-xs font-normal text-slate-500 lowercase font-sans">/ мес</span></p>
+                            <ul class="space-y-2 text-xs sm:text-sm text-slate-600">
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500 shrink-0"></i> Монтаж и обслуживание щитового оборудования</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500 shrink-0"></i> Электроснабжение модульных городков</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500 shrink-0"></i> Сертифицированный инструмент и допуски</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <button onclick="openModalWithPrefill('Электрик / Водитель-электрик', '210 000 ₽/мес')" class="w-full bg-navy-800 hover:bg-brand-blue text-white font-heading font-semibold py-3 rounded-xl transition-colors">
+                            Откликнуться на вакансию
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. Сварщики -->
+                <div class="vacancy-card electric bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all border border-slate-200 overflow-hidden flex flex-col justify-between group">
+                    <div>
+                        <div class="relative h-48 bg-slate-800 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=800&q=80" alt="Сварщик" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                            <span class="absolute top-4 left-4 bg-brand-accent text-slate-950 text-xs font-black px-3 py-1 rounded-full uppercase">Повышенная ставка</span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-heading text-xl text-slate-900 mb-2">Сварщики / Водители-сварщики</h3>
+                            <p class="font-heading text-2xl text-brand-blue font-bold mb-4">от 230 000 ₽ <span class="text-xs font-normal text-slate-500 lowercase font-sans">/ мес</span></p>
+                            <ul class="space-y-2 text-xs sm:text-sm text-slate-600">
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500 shrink-0"></i> Сварка металлоконструкций и технологических узлов</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500 shrink-0"></i> Надбавки за разряды и НАКС</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500 shrink-0"></i> Трехразовое горячее питание на объекте</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <button onclick="openModalWithPrefill('Сварщик / Водитель-сварщик', '230 000 ₽/мес')" class="w-full bg-navy-800 hover:bg-brand-blue text-white font-heading font-semibold py-3 rounded-xl transition-colors">
+                            Откликнуться на вакансию
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4. Автомеханики -->
+                <div class="vacancy-card mechanic bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all border border-slate-200 overflow-hidden flex flex-col justify-between group">
+                    <div>
+                        <div class="relative h-48 bg-slate-800 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1530046339160-ce3e530c7d2f?auto=format&fit=crop&w=800&q=80" alt="Автомеханик" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                            <span class="absolute top-4 left-4 bg-graphite-950/90 text-white text-xs font-bold px-3 py-1 rounded-full border border-slate-700">Грузовой парк</span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-heading text-xl text-slate-900 mb-2">Автомеханики / Слесари</h3>
+                            <p class="font-heading text-2xl text-brand-blue font-bold mb-4">от 210 000 ₽ <span class="text-xs font-normal text-slate-500 lowercase font-sans">/ мес</span></p>
+                            <ul class="space-y-2 text-xs sm:text-sm text-slate-600">
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500 shrink-0"></i> Плановое ТО и ремонт грузовой техники</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500 shrink-0"></i> Оборудованные теплые боксы со всем оснащением</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500 shrink-0"></i> Быстрая поставка оригинальных запчастей</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <button onclick="openModalWithPrefill('Автомеханик / Слесарь', '210 000 ₽/мес')" class="w-full bg-navy-800 hover:bg-brand-blue text-white font-heading font-semibold py-3 rounded-xl transition-colors">
+                            Откликнуться на вакансию
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 5. Охранники -->
+                <div class="vacancy-card guard bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all border border-slate-200 overflow-hidden flex flex-col justify-between group">
+                    <div>
+                        <div class="relative h-48 bg-slate-800 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&fit=crop&w=800&q=80" alt="Охранник" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                            <span class="absolute top-4 left-4 bg-graphite-950/90 text-white text-xs font-bold px-3 py-1 rounded-full border border-slate-700">Лицензия / Без УЧО</span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-heading text-xl text-slate-900 mb-2">Сотрудники охраны / Контролеры</h3>
+                            <p class="font-heading text-2xl text-brand-blue font-bold mb-4">от 180 000 ₽ <span class="text-xs font-normal text-slate-500 lowercase font-sans">/ мес</span></p>
+                            <ul class="space-y-2 text-xs sm:text-sm text-slate-600">
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500 shrink-0"></i> Контрольно-пропускной режим на КПП</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500 shrink-0"></i> Полный комплект форменной одежды</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500 shrink-0"></i> Удобный сменный график с отдыхом</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <button onclick="openModalWithPrefill('Сотрудник охраны / КПП', '180 000 ₽/мес')" class="w-full bg-navy-800 hover:bg-brand-blue text-white font-heading font-semibold py-3 rounded-xl transition-colors">
+                            Откликнуться на вакансию
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 6. Другие специальности -->
+                <div class="bg-gradient-to-br from-navy-900 to-graphite-950 rounded-2xl p-6 text-white flex flex-col justify-between border border-blue-900/60 shadow-lg">
+                    <div>
+                        <div class="w-12 h-12 bg-brand-accent/20 text-brand-accent rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="briefcase" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-heading text-2xl mb-2">Другие специальности</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                            В реестре более 30 открытых строительных и дорожных направлений по регионам. Оставьте контакты для персонального подбора под ваш опыт.
+                        </p>
+                    </div>
+                    <button onclick="openModal('Индивидуальный подбор')" class="w-full bg-brand-accent hover:bg-brand-accentHover text-slate-950 font-heading font-bold py-3.5 rounded-xl transition-colors">
+                        Узнать все открытые объекты
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- КАЛЬКУЛЯТОР ДОХОДА С АВТОЗАПОЛНЕНИЕМ -->
+    <section id="calculator" class="py-16 bg-navy-950 text-white border-y border-slate-800">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-xl mx-auto mb-10">
+                <span class="text-brand-accent font-bold text-xs uppercase tracking-widest block mb-2">Прозрачный расчет</span>
+                <h2 class="font-heading text-3xl sm:text-4xl">Калькулятор дохода за вахту</h2>
+                <p class="text-slate-400 text-sm mt-2">Рассчитайте гарантированную сумму выплат на руки за выбранный период вахты.</p>
+            </div>
+
+            <div class="bg-graphite-900/90 p-6 sm:p-8 rounded-2xl border border-blue-500/30 shadow-2xl">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                    
+                    <div class="md:col-span-7 space-y-6">
+                        <div>
+                            <div class="flex justify-between text-sm font-semibold mb-2">
+                                <span class="text-slate-300">Продолжительность вахты:</span>
+                                <span id="days-val" class="text-brand-accent font-bold">60 дней</span>
+                            </div>
+                            <input type="range" id="days-slider" min="1" max="4" step="1" value="3" oninput="updateCalculator()" class="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-accent">
+                            <div class="flex justify-between text-xs text-slate-500 mt-2 px-1">
+                                <span>30 дней</span>
+                                <span>45 дней</span>
+                                <span>60 дней</span>
+                                <span>90 дней</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Выберите специальность:</label>
+                            <select id="calc-prof" onchange="updateCalculator()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-accent">
+                                <option value="210000" data-name="Водитель самосвала (B, C, E)">Водитель (B, C, E) — от 210 000 ₽/мес</option>
+                                <option value="210000" data-name="Электрик / Водитель-электрик">Электрик — от 210 000 ₽/мес</option>
+                                <option value="230000" data-name="Сварщик НАКС / Монтажник">Сварщик НАКС — от 230 000 ₽/мес</option>
+                                <option value="210000" data-name="Автомеханик / Слесарь">Автомеханик / Слесарь — от 210 000 ₽/мес</option>
+                                <option value="180000" data-name="Охранник / КПП">Охранник объекта — от 180 000 ₽/мес</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-5 bg-graphite-950 p-6 rounded-xl border border-slate-800 text-center space-y-3">
+                        <span class="text-xs uppercase text-slate-400 font-semibold tracking-wider">Сумма к выплате на руки</span>
+                        <div id="total-income" class="font-heading text-4xl sm:text-5xl font-bold text-amber-400">
+                            420 000 ₽
+                        </div>
+                        <div class="text-xs text-slate-400 space-y-1 pt-2 border-t border-slate-800">
+                            <p class="text-emerald-400 font-medium">✓ Проезд: 0 ₽ (Оплачивает предприятие)</p>
+                            <p class="text-emerald-400 font-medium">✓ Проживание: 0 ₽ (Предоставляется)</p>
+                            <p class="text-emerald-400 font-medium">✓ Питание: Включено</p>
+                        </div>
+                        <button onclick="handleCalcApply()" class="w-full bg-brand-accent hover:bg-brand-accentHover text-slate-950 font-heading font-bold py-3 rounded-lg transition-all mt-2 shadow-md">
+                            Зафиксировать условия
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ПОРЯДОК ОФОРМЛЕНИЯ (3 ШАГА) -->
+    <section id="steps" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="font-heading text-3xl sm:text-4xl text-slate-900">Порядок оформления на вахту</h2>
+                <p class="mt-3 text-slate-600 text-sm sm:text-base">Координация выезда и покупка билетов осуществляются заранее.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                    <span class="font-heading text-3xl font-bold text-brand-blue mb-2 block">01</span>
+                    <h3 class="font-heading text-lg text-slate-900 mb-2">Заявка и консультация</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        Вы оставляете заявку на сайте. Специалист связывается с вами в течение рабочего дня, согласовывает специальность, объект и дату отправления.
+                    </p>
+                </div>
+
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                    <span class="font-heading text-3xl font-bold text-brand-blue mb-2 block">02</span>
+                    <h3 class="font-heading text-lg text-slate-900 mb-2">Билеты и документы</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        Предприятие оформляет проездные документы (электронные билеты на поезд или самолет) от вашего города до объекта за свой счет.
+                    </p>
+                </div>
+
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                    <span class="font-heading text-3xl font-bold text-brand-blue mb-2 block">03</span>
+                    <h3 class="font-heading text-lg text-slate-900 mb-2">Прибытие и оформление</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        По прибытии в город вас встретит водитель. Далее — прохождение медкомиссии, официальное трудоустройство, подписание документов и заселение в комфортное общежитие.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ГАРАНТИИ И УСЛОВИЯ -->
+    <section id="guarantees" class="py-16 bg-slate-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="font-heading text-3xl sm:text-4xl">Условия для соискателей</h2>
+                <p class="mt-3 text-slate-400 text-sm">Все базовые потребности на объекте закрываются за счет принимающей стороны.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-slate-800/60 p-6 rounded-xl border border-slate-700">
+                    <i data-lucide="ticket" class="w-8 h-8 text-amber-400 mb-4"></i>
+                    <h3 class="font-heading text-lg mb-2">Бесплатный проезд</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Покупка билетов в обе стороны за счет предприятия-заказчика.</p>
+                </div>
+                <div class="bg-slate-800/60 p-6 rounded-xl border border-slate-700">
+                    <i data-lucide="building" class="w-8 h-8 text-amber-400 mb-4"></i>
+                    <h3 class="font-heading text-lg mb-2">Проживание</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Размещение в модульных городках или хостелах с душем, кухней и бытовой техникой.</p>
+                </div>
+                <div class="bg-slate-800/60 p-6 rounded-xl border border-slate-700">
+                    <i data-lucide="shirt" class="w-8 h-8 text-amber-400 mb-4"></i>
+                    <h3 class="font-heading text-lg mb-2">Экипировка</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Полный комплект сезонной спецодежды и обуви выдается при заезде.</p>
+                </div>
+                <div class="bg-slate-800/60 p-6 rounded-xl border border-slate-700">
+                    <i data-lucide="wallet" class="w-8 h-8 text-amber-400 mb-4"></i>
+                    <h3 class="font-heading text-lg mb-2">Выплаты на карту</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Авансы каждые 2 недели и окончательный расчет без задержек.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ФИНАЛЬНАЯ АНКЕТА -->
+    <section id="apply-bottom" class="py-16 bg-gradient-to-b from-navy-900 to-graphite-950 border-t border-slate-800 text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <h2 class="font-heading text-3xl sm:text-4xl text-white">Анкета кандидата на вахту</h2>
+                <p class="text-slate-400 text-sm mt-2">Заполните поля ниже для регистрации в едином кадровом реестре.</p>
+            </div>
+
+            <form onsubmit="handleBottomFormSubmit(event)" class="space-y-5 max-w-2xl mx-auto bg-graphite-900/80 p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl relative overflow-hidden">
+                <!-- Светящийся акцент на фоне формы -->
+                <div class="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 rounded-full blur-3xl"></div>
+                
+                <div class="relative z-10">
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Ваше имя</label>
+                    <input type="text" required placeholder="Иван" class="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-5 py-3.5 focus:outline-none focus:border-brand-accent transition-colors">
+                </div>
+
+                <div class="relative z-10">
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Телефон</label>
+                    <input type="tel" required placeholder="+7 (___) ___-__-__" class="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-5 py-3.5 focus:outline-none focus:border-brand-accent transition-colors">
+                </div>
+
+                <div class="relative z-10">
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Выбранная вакансия</label>
+                    <select class="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-5 py-3.5 focus:outline-none focus:border-brand-accent transition-colors cursor-pointer">
+                        <option value="">Выберите вакансию</option>
+                        <option>Водитель самосвала / спецтехники (B, C, E)</option>
+                        <option>Электрик / Водитель-электрик</option>
+                        <option>Сварщик НАКС / Монтажник</option>
+                        <option>Автомеханик / Слесарь по грузовой технике</option>
+                        <option>Сотрудник службы охраны / КПП</option>
+                        <option>Разнорабочий / Строитель</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Дата рождения</label>
+                        <input type="date" required class="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-5 py-3.5 focus:outline-none focus:border-brand-accent transition-colors [color-scheme:dark]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Город проживания</label>
+                        <input type="text" required placeholder="Ваш город" class="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-5 py-3.5 focus:outline-none focus:border-brand-accent transition-colors">
+                    </div>
+                </div>
+
+                <div class="space-y-3 pt-4 text-[11px] text-slate-400 border-t border-slate-800 mt-4 relative z-10">
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <div class="relative flex items-start pt-0.5">
+                            <input type="checkbox" required checked class="w-4 h-4 rounded border-slate-600 text-brand-ctaPink focus:ring-0 bg-slate-800 cursor-pointer">
+                        </div>
+                        <span class="leading-tight group-hover:text-slate-300 transition-colors">Согласен с <a href="#privacy" class="text-brand-accent hover:underline">политикой конфиденциальности</a> и условиями обработки данных</span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <div class="relative flex items-start pt-0.5">
+                            <input type="checkbox" required checked class="w-4 h-4 rounded border-slate-600 text-brand-ctaPink focus:ring-0 bg-slate-800 cursor-pointer">
+                        </div>
+                        <span class="leading-tight group-hover:text-slate-300 transition-colors">Даю согласие на получение звонка по указанному номеру для подбора вакансии</span>
+                    </label>
+                </div>
+
+                <div class="pt-4 text-center relative z-10">
+                    <button type="submit" class="w-full sm:w-auto bg-[#ff0055] hover:bg-[#e0004c] text-white font-heading text-lg font-bold px-12 py-4 rounded-xl shadow-[0_0_20px_-5px_rgba(255,0,85,0.5)] transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 mx-auto">
+                        <span>Отправить заявку</span>
+                        <i data-lucide="check-circle" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- ПОДВАЛ С АКТУАЛЬНЫМИ РЕКВИЗИТАМИ -->
+    <footer class="bg-graphite-950 text-slate-400 border-t border-slate-800 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 pb-8 border-b border-slate-800 text-xs">
+                <div>
+                    <span class="font-heading text-lg text-white font-bold block mb-1">КАДРОВЫЙ ЦЕНТР ВАХТОВОГО ПОДБОРА</span>
+                    <p class="text-slate-500 mt-1">Официальная почта: <span class="text-slate-500">skillforcce@yandex.com</span></p>
+                    <!-- Юридическая информация (мелко для ботов, не отвлекает пользователя) -->
+                    <p class="text-[10px] text-slate-700/60 mt-3 font-mono">ИП Кашина Н.В. • ИНН 702203128030 • ОГРНИП 326700000021040</p>
+                </div>
+                <div class="flex space-x-6 text-slate-500">
+                    <a href="#privacy" class="hover:text-slate-300 transition-colors">Политика конфиденциальности</a>
+                    <a href="#consent" class="hover:text-slate-300 transition-colors">Согласие на обработку данных</a>
+                </div>
+            </div>
+            <div class="pt-6 text-[11px] text-slate-600 text-center flex flex-col sm:flex-row justify-between gap-2">
+                <p>© 2026. Сервис координации и содействия в трудоустройстве на вахту. Все права защищены.</p>
+                <p>Все услуги по подбору для соискателей бесплатны. Не является публичной офертой (ст. 437 ГК РФ).</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- МОДАЛЬНОЕ ОКНО ЗАЯВКИ С АВТОЗАПОЛНЕНИЕМ -->
+    <div id="modal-backdrop" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-graphite-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white" aria-label="Закрыть">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <h3 class="font-heading text-2xl text-white mb-1" id="modal-title">Откликнуться на вакансию</h3>
+            <p class="text-xs text-slate-400 mb-5" id="modal-subtitle">Оставьте контакты для согласования даты выезда и бронирования билетов.</p>
+
+            <form onsubmit="handleModalSubmit(event)" class="space-y-4">
+                <input type="hidden" id="modal-calc-data" name="calc_data" value="">
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Ваше ФИО</label>
+                    <input type="text" required placeholder="Иванов Сергей" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand-accent">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Номер телефона</label>
+                    <input type="tel" required placeholder="+7 (___) ___-__-__" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand-accent">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Выбранная специальность</label>
+                    <input type="text" id="modal-job-input" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent">
+                </div>
+
+                <div class="space-y-2 pt-1 text-[11px] text-slate-400">
+                    <label class="flex items-start gap-2">
+                        <input type="checkbox" required checked class="mt-0.5 rounded bg-slate-800 border-slate-700 text-brand-accent focus:ring-0">
+                        <span>Согласие на обработку персональных данных (ФЗ-152 РФ)</span>
+                    </label>
+                    <label class="flex items-start gap-2">
+                        <input type="checkbox" required checked class="mt-0.5 rounded bg-slate-800 border-slate-700 text-brand-accent focus:ring-0">
+                        <span>Согласие на получение звонка координатора</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="w-full bg-brand-accent hover:bg-brand-accentHover text-slate-950 font-heading text-lg font-bold py-3.5 rounded-lg transition-all shadow-lg mt-2">
+                    Отправить анкету координатору
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- СКРИПТЫ ВЗАИМОДЕЙСТВИЯ -->
+    <script>
+        lucide.createIcons();
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        function openModal(title = 'Заказать звонок') {
+            document.getElementById('modal-backdrop').classList.remove('hidden');
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-job-input').value = 'Индивидуальный подбор';
+            document.getElementById('modal-calc-data').value = '';
+        }
+
+        function openModalWithPrefill(jobTitle, salary) {
+            document.getElementById('modal-backdrop').classList.remove('hidden');
+            document.getElementById('modal-title').textContent = 'Отклик: ' + jobTitle;
+            document.getElementById('modal-subtitle').textContent = 'Ставка: ' + salary + '. Координатор свяжется для согласования билетов.';
+            document.getElementById('modal-job-input').value = jobTitle;
+            document.getElementById('modal-calc-data').value = salary;
+        }
+
+        function closeModal() {
+            document.getElementById('modal-backdrop').classList.add('hidden');
+        }
+
+        function filterVacancies(category) {
+            const cards = document.querySelectorAll('.vacancy-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-brand-blue', 'text-white');
+                btn.classList.add('bg-white', 'text-slate-700');
+            });
+
+            event.currentTarget.classList.remove('bg-white', 'text-slate-700');
+            event.currentTarget.classList.add('bg-brand-blue', 'text-white');
+
+            cards.forEach(card => {
+                if (category === 'all' || card.classList.contains(category)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function updateCalculator() {
+            const sliderVal = parseInt(document.getElementById('days-slider').value);
+            const daysMap = { 1: 30, 2: 45, 3: 60, 4: 90 };
+            const days = daysMap[sliderVal];
+            
+            const ratePerMonth = parseInt(document.getElementById('calc-prof').value);
+            document.getElementById('days-val').textContent = days + ' дней';
+
+            const total = Math.round((ratePerMonth / 30) * days);
+            document.getElementById('total-income').textContent = total.toLocaleString('ru-RU') + ' ₽';
+        }
+
+        function handleCalcApply() {
+            const selectEl = document.getElementById('calc-prof');
+            const profName = selectEl.options[selectEl.selectedIndex].getAttribute('data-name');
+            
+            const sliderVal = parseInt(document.getElementById('days-slider').value);
+            const daysMap = { 1: 30, 2: 45, 3: 60, 4: 90 };
+            const days = daysMap[sliderVal];
+            
+            const total = document.getElementById('total-income').textContent;
+
+            document.getElementById('modal-backdrop').classList.remove('hidden');
+            document.getElementById('modal-title').textContent = 'Бронирование ставки: ' + total;
+            document.getElementById('modal-subtitle').textContent = 'Расчет на вахту ' + days + ' дней (' + profName + ').';
+            document.getElementById('modal-job-input').value = profName;
+            document.getElementById('modal-calc-data').value = 'Вахта: ' + days + ' дн., Расчет: ' + total;
+        }
+
+        function handleFormSubmit(e, source) {
+            e.preventDefault();
+            alert('Заявка принята! Данные переданы координатору.');
+            e.target.reset();
+        }
+
+        function handleBottomFormSubmit(e) {
+            e.preventDefault();
+            alert('Анкета успешно зарегистрирована! Координатор свяжется с вами в ближайшее время.');
+            e.target.reset();
+        }
+
+        function handleModalSubmit(e) {
+            e.preventDefault();
+            alert('Анкета успешно отправлена! Мы свяжемся с вами в течение рабочего дня.');
+            closeModal();
+            e.target.reset();
+        }
+    </script>
+</body>
+</html>
