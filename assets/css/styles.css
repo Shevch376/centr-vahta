@@ -37,9 +37,9 @@ body { font-family: 'Inter', sans-serif; }
 
 .site-bang-shell {
     pointer-events: auto;
-    background: #1d4ed8;
+    background: #0f172a;
     border-radius: 0 0 1.75rem 1.75rem;
-    box-shadow: 0 1.25rem 3rem rgba(29, 78, 216, 0.28);
+    box-shadow: 0 1.25rem 3rem rgba(15, 23, 42, 0.36);
 }
 
 .site-bang-header + section {
@@ -50,10 +50,10 @@ body { font-family: 'Inter', sans-serif; }
     pointer-events: auto;
     max-width: 80rem;
     margin: 0 auto;
-    background: #1d4ed8;
+    background: #0f172a;
     border: 0;
     border-radius: 0 0 1.25rem 1.25rem;
-    box-shadow: 0 1.25rem 3rem rgba(29, 78, 216, 0.22);
+    box-shadow: 0 1.25rem 3rem rgba(15, 23, 42, 0.32);
 }
 
 .filter-btn {
@@ -101,6 +101,10 @@ body { font-family: 'Inter', sans-serif; }
 .captcha-check-compact {
     min-height: 2.75rem;
     padding: 0.7rem 0.85rem;
+}
+
+.section-muted {
+    background: #eef2f7;
 }
 
 .recaptcha-box {

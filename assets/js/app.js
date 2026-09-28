@@ -1,35 +1,84 @@
 lucide.createIcons();
 
+const RECAPTCHA_SITE_KEY = '6LeaN9QtAAAAAK9JhDr5-mPwB26VghVpk-wmYrq0';
+
+window.renderRecaptchas = function renderRecaptchas() {
+    if (!window.grecaptcha) return;
+
+    document.querySelectorAll('.g-recaptcha').forEach((captcha) => {
+        if (captcha.dataset.widgetId) return;
+
+        const widgetId = window.grecaptcha.render(captcha, {
+            sitekey: RECAPTCHA_SITE_KEY,
+            theme: 'light',
+        });
+        captcha.dataset.widgetId = String(widgetId);
+    });
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    setupPhoneInputs();
+    setupDateInputs();
+
+    if (window.grecaptcha) {
+        window.renderRecaptchas();
+    }
+});
+
 function validateCaptcha(form) {
-    if (!window.grecaptcha) {
-        return true;
-    }
-
     const captcha = form.querySelector('.g-recaptcha');
-    if (!captcha) {
-        return true;
+    if (!captcha) return true;
+
+    if (!window.grecaptcha) {
+        alert('Капча еще загружается. Подождите пару секунд и попробуйте снова.');
+        return false;
     }
 
-    const widgets = Array.from(document.querySelectorAll('.g-recaptcha'));
-    const widgetIndex = widgets.indexOf(captcha);
-    const token = window.grecaptcha.getResponse(widgetIndex);
-    if (token) {
-        return true;
+    if (!captcha.dataset.widgetId) {
+        window.renderRecaptchas();
     }
+
+    const widgetId = Number(captcha.dataset.widgetId);
+    const token = window.grecaptcha.getResponse(widgetId);
+    if (token) return true;
 
     alert('Подтвердите, что вы не робот.');
     return false;
 }
 
 function resetCaptcha(form) {
-    if (!window.grecaptcha) return;
-
     const captcha = form.querySelector('.g-recaptcha');
-    if (!captcha) return;
+    if (!captcha || !window.grecaptcha || !captcha.dataset.widgetId) return;
+    window.grecaptcha.reset(Number(captcha.dataset.widgetId));
+}
 
-    const widgets = Array.from(document.querySelectorAll('.g-recaptcha'));
-    const widgetIndex = widgets.indexOf(captcha);
-    window.grecaptcha.reset(widgetIndex);
+function setupPhoneInputs() {
+    document.querySelectorAll('.phone-input').forEach((input) => {
+        if (!input.value.trim()) input.value = '+7 ';
+
+        input.addEventListener('focus', () => {
+            if (!input.value.trim()) input.value = '+7 ';
+        });
+
+        input.addEventListener('input', () => {
+            if (input.value === '' || input.value === '+') {
+                input.value = '+7 ';
+            }
+        });
+    });
+}
+
+function setupDateInputs() {
+    document.querySelectorAll('.date-input').forEach((input) => {
+        input.addEventListener('input', () => {
+            const digits = input.value.replace(/\D/g, '').slice(0, 8);
+            const parts = [];
+            if (digits.slice(0, 2)) parts.push(digits.slice(0, 2));
+            if (digits.slice(2, 4)) parts.push(digits.slice(2, 4));
+            if (digits.slice(4, 8)) parts.push(digits.slice(4, 8));
+            input.value = parts.join('.');
+        });
+    });
 }
 
 function toggleMobileMenu() {
@@ -41,6 +90,7 @@ function openModal(title = 'Заказать звонок') {
     document.getElementById('modal-title').textContent = title;
     document.getElementById('modal-job-input').value = 'Индивидуальный подбор';
     document.getElementById('modal-calc-data').value = '';
+    window.renderRecaptchas();
 }
 
 function openModalWithPrefill(jobTitle, salary) {
@@ -49,6 +99,7 @@ function openModalWithPrefill(jobTitle, salary) {
     document.getElementById('modal-subtitle').textContent = 'Ставка: ' + salary + '. Координатор свяжется для согласования билетов.';
     document.getElementById('modal-job-input').value = jobTitle;
     document.getElementById('modal-calc-data').value = salary;
+    window.renderRecaptchas();
 }
 
 function closeModal() {
@@ -59,18 +110,11 @@ function filterVacancies(category) {
     const cards = document.querySelectorAll('.vacancy-card');
     const buttons = document.querySelectorAll('.filter-btn');
 
-    buttons.forEach((btn) => {
-        btn.classList.remove('active');
-    });
-
+    buttons.forEach((btn) => btn.classList.remove('active'));
     event.currentTarget.classList.add('active');
 
     cards.forEach((card) => {
-        if (category === 'all' || card.classList.contains(category)) {
-            card.style.display = 'flex';
-        } else {
-            card.style.display = 'none';
-        }
+        card.style.display = category === 'all' || card.classList.contains(category) ? 'flex' : 'none';
     });
 }
 
@@ -101,14 +145,16 @@ function handleCalcApply() {
     document.getElementById('modal-subtitle').textContent = 'Расчет на вахту ' + days + ' дней (' + profName + ').';
     document.getElementById('modal-job-input').value = profName;
     document.getElementById('modal-calc-data').value = 'Вахта: ' + days + ' дн., Расчет: ' + total;
+    window.renderRecaptchas();
 }
 
-function handleFormSubmit(e, source) {
+function handleFormSubmit(e) {
     e.preventDefault();
     if (!validateCaptcha(e.target)) return;
     alert('Заявка принята! Данные переданы координатору.');
     e.target.reset();
     resetCaptcha(e.target);
+    setupPhoneInputs();
 }
 
 function handleBottomFormSubmit(e) {
@@ -117,6 +163,7 @@ function handleBottomFormSubmit(e) {
     alert('Анкета успешно зарегистрирована! Координатор свяжется с вами в ближайшее время.');
     e.target.reset();
     resetCaptcha(e.target);
+    setupPhoneInputs();
 }
 
 function handleModalSubmit(e) {
@@ -126,4 +173,5 @@ function handleModalSubmit(e) {
     closeModal();
     e.target.reset();
     resetCaptcha(e.target);
+    setupPhoneInputs();
 }

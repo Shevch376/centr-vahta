@@ -15,7 +15,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        window.recaptchaOnload = function () {
+            if (window.renderRecaptchas) {
+                window.renderRecaptchas();
+            }
+        };
+    </script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=recaptchaOnload&render=explicit" async defer></script>
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-accent selection:text-slate-950">
@@ -121,13 +128,13 @@
 
                         <form onsubmit="handleFormSubmit(event, 'Главный экран')" class="space-y-4">
                             <div>
-                                <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Ваше имя</label>
-                                <input type="text" required placeholder="Константин" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand-accent transition-colors">
+                                <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">ФИО</label>
+                                <input type="text" required placeholder="Иванов Константин" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand-accent transition-colors">
                             </div>
 
                             <div>
                                 <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Номер телефона</label>
-                                <input type="tel" required placeholder="+7 (___) ___-__-__" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand-accent transition-colors">
+                                <input type="tel" required value="+7 " placeholder="+7 (___) ___-__-__" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand-accent transition-colors phone-input">
                             </div>
 
                             <div>
@@ -150,7 +157,7 @@
                             </button>
 
                             <p class="text-[10px] text-slate-500 text-center leading-normal">
-                                Нажимая кнопку, вы соглашаетесь с <a href="pages/privacy.html" class="text-blue-700 hover:underline">политикой обработки персональных данных</a> и звонком в соответствии с ФЗ-152 РФ.
+                                Нажимая кнопку, вы соглашаетесь с <a href="pages/privacy.html" class="text-blue-700 hover:underline">политикой конфиденциальности</a> и звонком в соответствии с ФЗ-152 РФ.
                             </p>
                         </form>
                     </div>
@@ -161,7 +168,7 @@
     </section>
 
     <!-- КАТАЛОГ ВАКАНСИЙ С ФИЛЬТРАМИ -->
-    <section id="vacancies" class="py-16 bg-slate-100">
+    <section id="vacancies" class="py-16 section-muted">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-10">
                 <h2 class="font-heading text-3xl sm:text-4xl text-slate-900">Открытые специальности</h2>
@@ -384,7 +391,7 @@
     </section>
 
     <!-- ПОРЯДОК ОФОРМЛЕНИЯ (3 ШАГА) -->
-    <section id="steps" class="py-16 bg-white">
+    <section id="steps" class="py-16 section-muted">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-12">
                 <h2 class="font-heading text-3xl sm:text-4xl text-slate-900">Порядок оформления на вахту</h2>
@@ -465,13 +472,13 @@
                 <div class="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 rounded-full blur-3xl"></div>
                 
                 <div class="relative z-10">
-                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Ваше имя</label>
-                    <input type="text" required placeholder="Иван" class="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-5 py-3.5 focus:outline-none focus:border-brand-accent transition-colors">
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">ФИО</label>
+                    <input type="text" required placeholder="Иванов Иван Иванович" class="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-5 py-3.5 focus:outline-none focus:border-brand-accent transition-colors">
                 </div>
 
                 <div class="relative z-10">
                     <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Телефон</label>
-                    <input type="tel" required placeholder="+7 (___) ___-__-__" class="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-5 py-3.5 focus:outline-none focus:border-brand-accent transition-colors">
+                    <input type="tel" required value="+7 " placeholder="+7 (___) ___-__-__" class="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-5 py-3.5 focus:outline-none focus:border-brand-accent transition-colors phone-input">
                 </div>
 
                 <div class="relative z-10">
@@ -490,7 +497,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Дата рождения</label>
-                        <input type="date" required class="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-5 py-3.5 focus:outline-none focus:border-brand-accent transition-colors [color-scheme:dark]">
+                        <input type="text" required inputmode="numeric" pattern="\d{2}\.\d{2}\.\d{4}" placeholder="дд.мм.гггг" class="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-5 py-3.5 focus:outline-none focus:border-brand-accent transition-colors date-input">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Город проживания</label>
@@ -503,7 +510,7 @@
                         <div class="relative flex items-start pt-0.5">
                             <input type="checkbox" required checked class="w-4 h-4 rounded border-slate-600 text-brand-ctaPink focus:ring-0 bg-slate-800 cursor-pointer">
                         </div>
-                        <span class="leading-tight group-hover:text-slate-300 transition-colors">Согласен с <a href="pages/privacy.html" class="text-brand-accent hover:underline">политикой обработки персональных данных</a></span>
+                        <span class="leading-tight group-hover:text-slate-300 transition-colors">Согласен с <a href="pages/privacy.html" class="text-brand-accent hover:underline">политикой конфиденциальности</a> и <a href="pages/personal-data.html" class="text-brand-accent hover:underline">согласием на обработку данных</a></span>
                     </label>
                     <label class="flex items-start gap-3 cursor-pointer group">
                         <div class="relative flex items-start pt-0.5">
@@ -535,7 +542,8 @@
                     <p class="text-[10px] text-slate-700/60 mt-3 font-mono">ИП Кашина Н.В. • ИНН 702203128030 • ОГРНИП 326700000021040</p>
                 </div>
                 <div class="flex space-x-6 text-slate-500">
-                    <a href="pages/privacy.html" class="hover:text-slate-300 transition-colors">Политика обработки персональных данных</a>
+                    <a href="pages/privacy.html" class="hover:text-slate-300 transition-colors">Политика конфиденциальности</a>
+                    <a href="pages/personal-data.html" class="hover:text-slate-300 transition-colors">Согласие на обработку данных</a>
                 </div>
             </div>
             <div class="pt-6 text-[11px] text-slate-600 text-center flex flex-col sm:flex-row justify-between gap-2">
@@ -565,7 +573,7 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Номер телефона</label>
-                    <input type="tel" required placeholder="+7 (___) ___-__-__" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand-accent">
+                    <input type="tel" required value="+7 " placeholder="+7 (___) ___-__-__" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand-accent phone-input">
                 </div>
 
                 <div>
@@ -576,7 +584,7 @@
                 <div class="space-y-2 pt-1 text-[11px] text-slate-400">
                     <label class="flex items-start gap-2">
                         <input type="checkbox" required checked class="mt-0.5 rounded bg-slate-800 border-slate-700 text-brand-accent focus:ring-0">
-                        <span>Согласие с <a href="pages/privacy.html" class="text-brand-accent hover:underline">политикой обработки персональных данных</a> (ФЗ-152 РФ)</span>
+                        <span>Согласие с <a href="pages/privacy.html" class="text-brand-accent hover:underline">политикой конфиденциальности</a> и <a href="pages/personal-data.html" class="text-brand-accent hover:underline">обработкой данных</a> (ФЗ-152 РФ)</span>
                     </label>
                     <label class="flex items-start gap-2">
                         <input type="checkbox" required checked class="mt-0.5 rounded bg-slate-800 border-slate-700 text-brand-accent focus:ring-0">
