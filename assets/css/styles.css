@@ -5,6 +5,31 @@ body { font-family: 'Inter', sans-serif; }
             background-size: 24px 24px;
         }
 
+/* Fallback for Tailwind CDN custom theme classes on production hosting. */
+.bg-graphite-950 { background-color: #0a0f1d !important; }
+.bg-graphite-900 { background-color: #0f172a !important; }
+.bg-graphite-900\/80 { background-color: rgba(15, 23, 42, .8) !important; }
+.bg-graphite-900\/90 { background-color: rgba(15, 23, 42, .9) !important; }
+.bg-navy-950 { background-color: #090e1a !important; }
+.bg-navy-900 { background-color: #172554 !important; }
+.bg-navy-800 { background-color: #1e3a8a !important; }
+.bg-navy-800\/90 { background-color: rgba(30, 58, 138, .9) !important; }
+.from-navy-900 { --tw-gradient-from: #172554 var(--tw-gradient-from-position) !important; --tw-gradient-to: rgba(23, 37, 84, 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+.from-navy-800 { --tw-gradient-from: #1e3a8a var(--tw-gradient-from-position) !important; --tw-gradient-to: rgba(30, 58, 138, 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+.to-graphite-950 { --tw-gradient-to: #0a0f1d var(--tw-gradient-to-position) !important; }
+.to-blue-900 { --tw-gradient-to: #1e3a8a var(--tw-gradient-to-position) !important; }
+.bg-brand-accent { background-color: #f59e0b !important; }
+.hover\:bg-brand-accentHover:hover { background-color: #d97706 !important; }
+.hover\:bg-brand-blue:hover { background-color: #1d4ed8 !important; }
+.text-brand-accent { color: #f59e0b !important; }
+.text-brand-blue { color: #1d4ed8 !important; }
+.border-brand-accent { border-color: #f59e0b !important; }
+.focus\:border-brand-accent:focus { border-color: #f59e0b !important; }
+.accent-brand-accent { accent-color: #f59e0b !important; }
+.text-brand-ctaPink { color: #ff0055 !important; }
+.bg-brand-ctaPink { background-color: #ff0055 !important; }
+.hover\:bg-brand-ctaPinkHover:hover { background-color: #e0004c !important; }
+
 .site-bang-header {
     padding: 0 1rem;
     pointer-events: none;
