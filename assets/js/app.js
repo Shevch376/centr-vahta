@@ -1,7 +1,7 @@
 lucide.createIcons();
 
 const RECAPTCHA_SITE_KEY = '6LeaN9QtAAAAAK9JhDr5-mPwB26VghVpk-wmYrq0';
-const GOOGLE_SHEETS_ENDPOINT = '';
+const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzUhOtqiNofsFX5pJJVjbuC7roHCMDmrZN6HuNfQngC9Uu6P-Qjn4FOw1vDcSzWSnDD/exec';
 
 window.renderRecaptchas = function renderRecaptchas() {
     if (!window.grecaptcha) return;
