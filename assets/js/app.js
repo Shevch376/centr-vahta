@@ -1,6 +1,7 @@
 lucide.createIcons();
 
 const RECAPTCHA_SITE_KEY = '6LeaN9QtAAAAAK9JhDr5-mPwB26VghVpk-wmYrq0';
+const GOOGLE_SHEETS_ENDPOINT = '';
 
 window.renderRecaptchas = function renderRecaptchas() {
     if (!window.grecaptcha) return;
@@ -50,6 +51,78 @@ function resetCaptcha(form) {
     const captcha = form.querySelector('.g-recaptcha');
     if (!captcha || !window.grecaptcha || !captcha.dataset.widgetId) return;
     window.grecaptcha.reset(Number(captcha.dataset.widgetId));
+}
+
+function formatMoscowDate(date = new Date()) {
+    return new Intl.DateTimeFormat('ru-RU', {
+        timeZone: 'Europe/Moscow',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+    }).format(date).replace(',', '');
+}
+
+function calculateAge(dateText) {
+    if (!dateText) return '';
+    const match = dateText.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+    if (!match) return '';
+
+    const day = Number(match[1]);
+    const month = Number(match[2]) - 1;
+    const year = Number(match[3]);
+    const birthDate = new Date(year, month, day);
+    if (Number.isNaN(birthDate.getTime())) return '';
+
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age -= 1;
+    }
+
+    return age > 0 && age < 100 ? String(age) : '';
+}
+
+function getFieldValue(form, selector) {
+    const field = form.querySelector(selector);
+    return field ? field.value.trim() : '';
+}
+
+function collectLeadData(form, source) {
+    const inputs = form.querySelectorAll('input:not([type="hidden"]):not([type="checkbox"]):not([type="range"]), select');
+    const dateValue = getFieldValue(form, '.date-input');
+
+    return {
+        submittedAt: formatMoscowDate(),
+        phone: getFieldValue(form, 'input[type="tel"]'),
+        name: inputs[0] ? inputs[0].value.trim() : '',
+        vacancy: getFieldValue(form, '#modal-job-input') || (inputs[2] ? inputs[2].value.trim() : '') || source,
+        city: getFieldValue(form, 'input[placeholder="Ваш город"]'),
+        age: calculateAge(dateValue),
+        status: 'Новая',
+        operator: '',
+        source,
+    };
+}
+
+async function submitLead(form, source) {
+    if (!GOOGLE_SHEETS_ENDPOINT) {
+        throw new Error('Не подключен URL Google Apps Script для отправки заявок.');
+    }
+
+    const payload = collectLeadData(form, source);
+    await fetch(GOOGLE_SHEETS_ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+            'Content-Type': 'text/plain;charset=utf-8',
+        },
+        body: JSON.stringify(payload),
+    });
 }
 
 function setupPhoneInputs() {
@@ -148,30 +221,45 @@ function handleCalcApply() {
     window.renderRecaptchas();
 }
 
-function handleFormSubmit(e) {
+async function handleFormSubmit(e, source = 'Главный экран') {
     e.preventDefault();
     if (!validateCaptcha(e.target)) return;
-    alert('Заявка принята! Данные переданы координатору.');
-    e.target.reset();
-    resetCaptcha(e.target);
-    setupPhoneInputs();
+    try {
+        await submitLead(e.target, source);
+        alert('Заявка принята! Данные переданы координатору.');
+        e.target.reset();
+        resetCaptcha(e.target);
+        setupPhoneInputs();
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
-function handleBottomFormSubmit(e) {
+async function handleBottomFormSubmit(e) {
     e.preventDefault();
     if (!validateCaptcha(e.target)) return;
-    alert('Анкета успешно зарегистрирована! Координатор свяжется с вами в ближайшее время.');
-    e.target.reset();
-    resetCaptcha(e.target);
-    setupPhoneInputs();
+    try {
+        await submitLead(e.target, 'Анкета кандидата');
+        alert('Анкета успешно зарегистрирована! Координатор свяжется с вами в ближайшее время.');
+        e.target.reset();
+        resetCaptcha(e.target);
+        setupPhoneInputs();
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
-function handleModalSubmit(e) {
+async function handleModalSubmit(e) {
     e.preventDefault();
     if (!validateCaptcha(e.target)) return;
-    alert('Анкета успешно отправлена! Мы свяжемся с вами в течение рабочего дня.');
-    closeModal();
-    e.target.reset();
-    resetCaptcha(e.target);
-    setupPhoneInputs();
+    try {
+        await submitLead(e.target, 'Модальное окно');
+        alert('Анкета успешно отправлена! Мы свяжемся с вами в течение рабочего дня.');
+        closeModal();
+        e.target.reset();
+        resetCaptcha(e.target);
+        setupPhoneInputs();
+    } catch (error) {
+        alert(error.message);
+    }
 }
