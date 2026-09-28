@@ -224,7 +224,7 @@ function collectLeadData(form, source) {
         submittedAt: formatMoscowDate(),
         phone: getFieldValue(form, 'input[type="tel"]'),
         name: inputs[0] ? inputs[0].value.trim() : '',
-        vacancy: getFieldValue(form, '#modal-job-input') || (inputs[2] ? inputs[2].value.trim() : '') || source,
+        vacancy: getFieldValue(form, '#modal-job-input') || (inputs[2] ? inputs[2].value.trim() : ''),
         city: getFieldValue(form, 'input[placeholder="Ваш город"]'),
         age: calculateAge(dateValue),
         source,
