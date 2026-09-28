@@ -37,9 +37,11 @@ body { font-family: 'Inter', sans-serif; }
 
 .site-bang-shell {
     pointer-events: auto;
-    background: #0f172a;
+    background: rgba(15, 23, 42, 0.82);
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    backdrop-filter: blur(14px);
     border-radius: 0 0 1.75rem 1.75rem;
-    box-shadow: 0 1.25rem 3rem rgba(15, 23, 42, 0.36);
+    box-shadow: 0 1.25rem 3rem rgba(15, 23, 42, 0.28);
 }
 
 .site-bang-header + section {
@@ -50,7 +52,8 @@ body { font-family: 'Inter', sans-serif; }
     pointer-events: auto;
     max-width: 80rem;
     margin: 0 auto;
-    background: #0f172a;
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(14px);
     border: 0;
     border-radius: 0 0 1.25rem 1.25rem;
     box-shadow: 0 1.25rem 3rem rgba(15, 23, 42, 0.32);

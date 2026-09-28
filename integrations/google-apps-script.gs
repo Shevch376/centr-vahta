@@ -7,6 +7,7 @@ function doPost(e) {
     return jsonResponse({ success: false, message: 'Лист не найден' });
   }
 
+  ensureTrafficSourceColumn(sheet);
   const data = parsePayload(e);
 
   sheet.appendRow([
@@ -22,6 +23,26 @@ function doPost(e) {
   ]);
 
   return jsonResponse({ success: true });
+}
+
+function ensureTrafficSourceColumn(sheet) {
+  const headerRange = sheet.getRange(1, 1, 1, sheet.getLastColumn());
+  const headers = headerRange.getValues()[0].map(function (value) {
+    return String(value).trim().toLowerCase();
+  });
+
+  if (headers.indexOf('источник перехода') !== -1) {
+    return;
+  }
+
+  const statusIndex = headers.indexOf('статус');
+  if (statusIndex !== -1) {
+    sheet.insertColumnBefore(statusIndex + 1);
+    sheet.getRange(1, statusIndex + 1).setValue('Источник перехода');
+    return;
+  }
+
+  sheet.getRange(1, sheet.getLastColumn() + 1).setValue('Источник перехода');
 }
 
 function parsePayload(e) {
