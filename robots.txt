@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://centr-vahta.ru/sitemap.xml
