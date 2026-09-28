@@ -1,0 +1,6 @@
+body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-heading { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.02em; }
+        .hero-pattern {
+            background-image: radial-gradient(rgba(37, 99, 235, 0.18) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
