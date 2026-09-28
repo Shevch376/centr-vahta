@@ -4,3 +4,43 @@ body { font-family: 'Inter', sans-serif; }
             background-image: radial-gradient(rgba(37, 99, 235, 0.18) 1px, transparent 1px);
             background-size: 24px 24px;
         }
+
+.site-bang-header {
+    padding: 0 1rem;
+    pointer-events: none;
+}
+
+.site-bang-shell {
+    pointer-events: auto;
+    background: #1d4ed8;
+    border-radius: 0 0 1.75rem 1.75rem;
+    box-shadow: 0 1.25rem 3rem rgba(29, 78, 216, 0.28);
+}
+
+.site-bang-header + section {
+    padding-top: 8.5rem;
+}
+
+.site-bang-header #mobile-menu {
+    pointer-events: auto;
+    max-width: 80rem;
+    margin: 0 auto;
+    background: #1d4ed8;
+    border: 0;
+    border-radius: 0 0 1.25rem 1.25rem;
+    box-shadow: 0 1.25rem 3rem rgba(29, 78, 216, 0.22);
+}
+
+@media (max-width: 767px) {
+    .site-bang-header {
+        padding: 0;
+    }
+
+    .site-bang-shell {
+        border-radius: 0 0 1.1rem 1.1rem;
+    }
+
+    .site-bang-header + section {
+        padding-top: 7.25rem;
+    }
+}
