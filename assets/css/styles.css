@@ -103,12 +103,19 @@ body { font-family: 'Inter', sans-serif; }
     padding: 0.7rem 0.85rem;
 }
 
-.smart-captcha-slot {
-    min-height: 0;
+.recaptcha-box {
+    display: flex;
+    justify-content: center;
+    min-height: 78px;
+    overflow: hidden;
 }
 
-.captcha-smart-enabled .captcha-fallback {
-    display: none;
+@media (max-width: 380px) {
+    .recaptcha-box {
+        transform: scale(.88);
+        transform-origin: left center;
+        width: 304px;
+    }
 }
 
 @media (max-width: 767px) {

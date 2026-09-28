@@ -1,60 +1,19 @@
 lucide.createIcons();
 
-const smartCaptchaWidgets = new Map();
-
-function getSmartCaptchaSiteKey() {
-    return (window.SMARTCAPTCHA_SITEKEY || '').trim();
-}
-
-function initSmartCaptchaWidgets() {
-    const sitekey = getSmartCaptchaSiteKey();
-    const slots = document.querySelectorAll('[data-captcha-widget]');
-
-    if (!sitekey || sitekey === 'YANDEX_SMARTCAPTCHA_SITEKEY') {
-        document.body.classList.add('captcha-fallback-enabled');
-        return;
-    }
-
-    if (!window.smartCaptcha) {
-        return;
-    }
-
-    document.body.classList.add('captcha-smart-enabled');
-    document.body.classList.remove('captcha-fallback-enabled');
-
-    slots.forEach((slot) => {
-        if (smartCaptchaWidgets.has(slot)) {
-            return;
-        }
-
-        const form = slot.closest('form');
-        const widgetId = window.smartCaptcha.render(slot, {
-            sitekey,
-            hl: 'ru',
-            callback: (token) => {
-                if (form) {
-                    form.dataset.captchaToken = token || '';
-                }
-            },
-        });
-
-        smartCaptchaWidgets.set(slot, widgetId);
-    });
-}
-
-window.addEventListener('smartcaptcha-ready', initSmartCaptchaWidgets);
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.__smartCaptchaReady || window.smartCaptcha) {
-        initSmartCaptchaWidgets();
-    }
-});
-
-function validateSmartCaptcha(form) {
-    if (!getSmartCaptchaSiteKey() || !window.smartCaptcha) {
+function validateCaptcha(form) {
+    if (!window.grecaptcha) {
         return true;
     }
 
-    if (form.dataset.captchaToken) {
+    const captcha = form.querySelector('.g-recaptcha');
+    if (!captcha) {
+        return true;
+    }
+
+    const widgets = Array.from(document.querySelectorAll('.g-recaptcha'));
+    const widgetIndex = widgets.indexOf(captcha);
+    const token = window.grecaptcha.getResponse(widgetIndex);
+    if (token) {
         return true;
     }
 
@@ -62,18 +21,15 @@ function validateSmartCaptcha(form) {
     return false;
 }
 
-function resetSmartCaptcha(form) {
-    form.dataset.captchaToken = '';
+function resetCaptcha(form) {
+    if (!window.grecaptcha) return;
 
-    if (!window.smartCaptcha) {
-        return;
-    }
+    const captcha = form.querySelector('.g-recaptcha');
+    if (!captcha) return;
 
-    const slot = form.querySelector('[data-captcha-widget]');
-    const widgetId = smartCaptchaWidgets.get(slot);
-    if (widgetId !== undefined) {
-        window.smartCaptcha.reset(widgetId);
-    }
+    const widgets = Array.from(document.querySelectorAll('.g-recaptcha'));
+    const widgetIndex = widgets.indexOf(captcha);
+    window.grecaptcha.reset(widgetIndex);
 }
 
 function toggleMobileMenu() {
@@ -149,25 +105,25 @@ function handleCalcApply() {
 
 function handleFormSubmit(e, source) {
     e.preventDefault();
-    if (!validateSmartCaptcha(e.target)) return;
+    if (!validateCaptcha(e.target)) return;
     alert('Заявка принята! Данные переданы координатору.');
     e.target.reset();
-    resetSmartCaptcha(e.target);
+    resetCaptcha(e.target);
 }
 
 function handleBottomFormSubmit(e) {
     e.preventDefault();
-    if (!validateSmartCaptcha(e.target)) return;
+    if (!validateCaptcha(e.target)) return;
     alert('Анкета успешно зарегистрирована! Координатор свяжется с вами в ближайшее время.');
     e.target.reset();
-    resetSmartCaptcha(e.target);
+    resetCaptcha(e.target);
 }
 
 function handleModalSubmit(e) {
     e.preventDefault();
-    if (!validateSmartCaptcha(e.target)) return;
+    if (!validateCaptcha(e.target)) return;
     alert('Анкета успешно отправлена! Мы свяжемся с вами в течение рабочего дня.');
     closeModal();
     e.target.reset();
-    resetSmartCaptcha(e.target);
+    resetCaptcha(e.target);
 }
