@@ -15,6 +15,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        window.SMARTCAPTCHA_SITEKEY = '';
+        window.smartCaptchaInit = function () {
+            window.__smartCaptchaReady = true;
+            window.dispatchEvent(new Event('smartcaptcha-ready'));
+        };
+    </script>
+    <script src="https://smartcaptcha.cloud.yandex.ru/captcha.js?render=onload&onload=smartCaptchaInit" defer></script>
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-accent selection:text-slate-950">
@@ -141,7 +149,8 @@
                                 </select>
                             </div>
 
-                            <label class="captcha-check">
+                            <div class="smart-captcha-slot" data-captcha-widget></div>
+                            <label class="captcha-check captcha-fallback">
                                 <input type="checkbox" required>
                                 <span>Я не робот</span>
                             </label>
@@ -513,7 +522,8 @@
                         </div>
                         <span class="leading-tight group-hover:text-slate-300 transition-colors">Даю согласие на получение звонка по указанному номеру для подбора вакансии</span>
                     </label>
-                    <label class="captcha-check">
+                    <div class="smart-captcha-slot" data-captcha-widget></div>
+                    <label class="captcha-check captcha-fallback">
                         <input type="checkbox" required>
                         <span>Я не робот</span>
                     </label>
@@ -587,7 +597,8 @@
                         <input type="checkbox" required checked class="mt-0.5 rounded bg-slate-800 border-slate-700 text-brand-accent focus:ring-0">
                         <span>Согласие на получение звонка координатора</span>
                     </label>
-                    <label class="captcha-check captcha-check-compact">
+                    <div class="smart-captcha-slot" data-captcha-widget></div>
+                    <label class="captcha-check captcha-check-compact captcha-fallback">
                         <input type="checkbox" required>
                         <span>Я не робот</span>
                     </label>
