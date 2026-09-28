@@ -16,6 +16,7 @@ function doPost(e) {
     data.vacancy || '',
     data.city || '',
     data.age || '',
+    data.trafficSource || '',
     '',
     ''
   ]);

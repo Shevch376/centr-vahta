@@ -18,6 +18,7 @@ window.renderRecaptchas = function renderRecaptchas() {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    saveTrafficSource();
     setupPhoneInputs();
     setupDateInputs();
 
@@ -64,6 +65,47 @@ function formatMoscowDate(date = new Date()) {
         second: '2-digit',
         hour12: false,
     }).format(date).replace(',', '');
+}
+
+function getStoredTrafficSource() {
+    return sessionStorage.getItem('trafficSource') || '';
+}
+
+function saveTrafficSource() {
+    if (getStoredTrafficSource()) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const utmSource = (params.get('utm_source') || '').toLowerCase();
+    const referrer = document.referrer || '';
+    let referrerHost = '';
+
+    try {
+        referrerHost = referrer ? new URL(referrer).hostname.toLowerCase() : '';
+    } catch (error) {
+        referrerHost = '';
+    }
+
+    let trafficSource = 'Прямой заход';
+
+    if (utmSource.includes('vk') || params.has('vkclid')) {
+        trafficSource = 'VK Реклама';
+    } else if (utmSource.includes('yandex') || utmSource.includes('ya') || params.has('yclid') || params.has('ymclid')) {
+        trafficSource = 'Яндекс Реклама';
+    } else if (utmSource.includes('google')) {
+        trafficSource = 'Google Реклама';
+    } else if (utmSource) {
+        trafficSource = 'Реклама: ' + utmSource;
+    } else if (referrerHost.includes('vk.com') || referrerHost.includes('vk.ru')) {
+        trafficSource = 'VK';
+    } else if (referrerHost.includes('yandex.')) {
+        trafficSource = 'Яндекс Поиск';
+    } else if (referrerHost.includes('google.')) {
+        trafficSource = 'Google Поиск';
+    } else if (referrerHost) {
+        trafficSource = 'Другой сайт: ' + referrerHost;
+    }
+
+    sessionStorage.setItem('trafficSource', trafficSource);
 }
 
 function calculateAge(dateText) {
@@ -227,6 +269,7 @@ function collectLeadData(form, source) {
         vacancy: getFieldValue(form, '#modal-job-input') || (inputs[2] ? inputs[2].value.trim() : ''),
         city: getFieldValue(form, 'input[placeholder="Ваш город"]'),
         age: calculateAge(dateValue),
+        trafficSource: getStoredTrafficSource() || 'Прямой заход',
         source,
     };
 }
