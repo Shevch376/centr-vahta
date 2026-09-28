@@ -345,6 +345,7 @@ function toggleMobileMenu() {
 }
 
 function openModal(title = 'Заказать звонок') {
+    trackVkGoal('lead_open');
     document.getElementById('modal-backdrop').classList.remove('hidden');
     document.getElementById('modal-title').textContent = title;
     document.getElementById('modal-job-input').value = 'Индивидуальный подбор';
@@ -353,6 +354,7 @@ function openModal(title = 'Заказать звонок') {
 }
 
 function openModalWithPrefill(jobTitle, salary) {
+    trackVkGoal('lead_open');
     document.getElementById('modal-backdrop').classList.remove('hidden');
     document.getElementById('modal-title').textContent = 'Отклик: ' + jobTitle;
     document.getElementById('modal-subtitle').textContent = 'Ставка: ' + salary + '. Координатор свяжется для согласования билетов.';
@@ -390,6 +392,7 @@ function updateCalculator() {
 }
 
 function handleCalcApply() {
+    trackVkGoal('lead_open');
     const selectEl = document.getElementById('calc-prof');
     const profName = selectEl.options[selectEl.selectedIndex].getAttribute('data-name');
 
