@@ -28,12 +28,10 @@ lucide.createIcons();
             const buttons = document.querySelectorAll('.filter-btn');
 
             buttons.forEach(btn => {
-                btn.classList.remove('bg-brand-blue', 'text-white');
-                btn.classList.add('bg-white', 'text-slate-700');
+                btn.classList.remove('active');
             });
 
-            event.currentTarget.classList.remove('bg-white', 'text-slate-700');
-            event.currentTarget.classList.add('bg-brand-blue', 'text-white');
+            event.currentTarget.classList.add('active');
 
             cards.forEach(card => {
                 if (category === 'all' || card.classList.contains(category)) {

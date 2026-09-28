@@ -141,6 +141,11 @@
                                 </select>
                             </div>
 
+                            <label class="captcha-check">
+                                <input type="checkbox" required>
+                                <span>Я не робот</span>
+                            </label>
+
                             <button type="submit" class="w-full bg-brand-accent hover:bg-brand-accentHover text-slate-950 font-heading text-lg font-bold py-3.5 px-6 rounded-lg transition-all shadow-lg flex items-center justify-center space-x-2">
                                 <span>Подобрать объект</span>
                                 <i data-lucide="arrow-right" class="w-5 h-5"></i>
@@ -167,11 +172,11 @@
 
             <!-- Фильтр-табы -->
             <div class="flex flex-wrap justify-center gap-2 mb-10">
-                <button onclick="filterVacancies('all')" class="filter-btn active px-5 py-2 rounded-full text-xs sm:text-sm font-semibold bg-brand-blue text-white shadow-sm transition-all">Все специальности</button>
-                <button onclick="filterVacancies('driver')" class="filter-btn px-5 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white text-slate-700 hover:bg-slate-200 transition-all border border-slate-300">Водители</button>
-                <button onclick="filterVacancies('electric')" class="filter-btn px-5 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white text-slate-700 hover:bg-slate-200 transition-all border border-slate-300">Электрики & Сварщики</button>
-                <button onclick="filterVacancies('mechanic')" class="filter-btn px-5 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white text-slate-700 hover:bg-slate-200 transition-all border border-slate-300">Автомеханики</button>
-                <button onclick="filterVacancies('guard')" class="filter-btn px-5 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white text-slate-700 hover:bg-slate-200 transition-all border border-slate-300">Охрана</button>
+                <button onclick="filterVacancies('all')" class="filter-btn active px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all">Все специальности</button>
+                <button onclick="filterVacancies('driver')" class="filter-btn px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all">Водители</button>
+                <button onclick="filterVacancies('electric')" class="filter-btn px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all">Электрики & Сварщики</button>
+                <button onclick="filterVacancies('mechanic')" class="filter-btn px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all">Автомеханики</button>
+                <button onclick="filterVacancies('guard')" class="filter-btn px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all">Охрана</button>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -508,6 +513,10 @@
                         </div>
                         <span class="leading-tight group-hover:text-slate-300 transition-colors">Даю согласие на получение звонка по указанному номеру для подбора вакансии</span>
                     </label>
+                    <label class="captcha-check">
+                        <input type="checkbox" required>
+                        <span>Я не робот</span>
+                    </label>
                 </div>
 
                 <div class="pt-4 text-center relative z-10">
@@ -578,6 +587,10 @@
                     <label class="flex items-start gap-2">
                         <input type="checkbox" required checked class="mt-0.5 rounded bg-slate-800 border-slate-700 text-brand-accent focus:ring-0">
                         <span>Согласие на получение звонка координатора</span>
+                    </label>
+                    <label class="captcha-check captcha-check-compact">
+                        <input type="checkbox" required>
+                        <span>Я не робот</span>
                     </label>
                 </div>
 
