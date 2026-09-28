@@ -16,8 +16,8 @@ function doPost(e) {
     data.vacancy || '',
     data.city || '',
     data.age || '',
-    data.status || 'Новая',
-    data.operator || ''
+    '',
+    ''
   ]);
 
   return jsonResponse({ success: true });

@@ -103,8 +103,6 @@ function collectLeadData(form, source) {
         vacancy: getFieldValue(form, '#modal-job-input') || (inputs[2] ? inputs[2].value.trim() : '') || source,
         city: getFieldValue(form, 'input[placeholder="Ваш город"]'),
         age: calculateAge(dateValue),
-        status: 'Новая',
-        operator: '',
         source,
     };
 }
