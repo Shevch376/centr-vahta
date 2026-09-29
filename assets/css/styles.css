@@ -5,6 +5,18 @@ body { font-family: 'Inter', sans-serif; }
             background-size: 24px 24px;
         }
 
+::selection {
+    color: #fff;
+    background: rgba(37, 99, 235, 0.82);
+}
+
+input::selection,
+textarea::selection,
+select::selection {
+    color: #fff;
+    background: rgba(245, 158, 11, 0.78);
+}
+
 /* Fallback for Tailwind CDN custom theme classes on production hosting. */
 .bg-graphite-950 { background-color: #0a0f1d !important; }
 .bg-graphite-900 { background-color: #0f172a !important; }
