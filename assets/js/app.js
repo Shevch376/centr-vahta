@@ -2,18 +2,24 @@ lucide.createIcons();
 
 const RECAPTCHA_SITE_KEY = '6LeaN9QtAAAAAK9JhDr5-mPwB26VghVpk-wmYrq0';
 const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyp1qXmvyq-Ev3hNO5f9kUPoZK9vXGj__Ij3q5sHLpHhWY0gU4dDLa98K5Wx1eJuYC3/exec';
+const LEAD_SUBMIT_TIMEOUT_MS = 4500;
 
 window.renderRecaptchas = function renderRecaptchas() {
     if (!window.grecaptcha) return;
 
     document.querySelectorAll('.g-recaptcha').forEach((captcha) => {
         if (captcha.dataset.widgetId) return;
+        if (captcha.closest('.hidden')) return;
 
-        const widgetId = window.grecaptcha.render(captcha, {
-            sitekey: RECAPTCHA_SITE_KEY,
-            theme: 'light',
-        });
-        captcha.dataset.widgetId = String(widgetId);
+        try {
+            const widgetId = window.grecaptcha.render(captcha, {
+                sitekey: RECAPTCHA_SITE_KEY,
+                theme: 'light',
+            });
+            captcha.dataset.widgetId = String(widgetId);
+        } catch (error) {
+            captcha.dataset.widgetError = 'true';
+        }
     });
 };
 
@@ -21,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     saveTrafficSource();
     setupPhoneInputs();
     setupDateInputs();
+    setupModalControls();
 
     if (window.grecaptcha) {
         window.renderRecaptchas();
@@ -40,6 +47,11 @@ function validateCaptcha(form) {
         window.renderRecaptchas();
     }
 
+    if (!captcha.dataset.widgetId) {
+        showFormMessage(form, 'error', 'Капча еще загружается', 'Подождите пару секунд и попробуйте снова.');
+        return false;
+    }
+
     const widgetId = Number(captcha.dataset.widgetId);
     const token = window.grecaptcha.getResponse(widgetId);
     if (token) return true;
@@ -51,7 +63,12 @@ function validateCaptcha(form) {
 function resetCaptcha(form) {
     const captcha = form.querySelector('.g-recaptcha');
     if (!captcha || !window.grecaptcha || !captcha.dataset.widgetId) return;
-    window.grecaptcha.reset(Number(captcha.dataset.widgetId));
+    try {
+        window.grecaptcha.reset(Number(captcha.dataset.widgetId));
+    } catch (error) {
+        delete captcha.dataset.widgetId;
+        window.renderRecaptchas();
+    }
 }
 
 function formatMoscowDate(date = new Date()) {
@@ -85,29 +102,28 @@ function saveTrafficSource() {
         referrerHost = '';
     }
 
-    let trafficSource = 'Прямой заход';
+    let trafficSource = '\u041f\u0440\u044f\u043c\u043e\u0439 \u0437\u0430\u0445\u043e\u0434';
 
     if (utmSource.includes('vk') || params.has('vkclid')) {
-        trafficSource = 'VK Реклама';
+        trafficSource = 'VK \u0440\u0435\u043a\u043b\u0430\u043c\u0430';
     } else if (utmSource.includes('yandex') || utmSource.includes('ya') || params.has('yclid') || params.has('ymclid')) {
-        trafficSource = 'Яндекс Реклама';
+        trafficSource = '\u042f\u043d\u0434\u0435\u043a\u0441 \u0440\u0435\u043a\u043b\u0430\u043c\u0430';
     } else if (utmSource.includes('google')) {
-        trafficSource = 'Google Реклама';
+        trafficSource = 'Google \u0440\u0435\u043a\u043b\u0430\u043c\u0430';
     } else if (utmSource) {
-        trafficSource = 'Реклама: ' + utmSource;
+        trafficSource = '\u0420\u0435\u043a\u043b\u0430\u043c\u0430: ' + utmSource;
     } else if (referrerHost.includes('vk.com') || referrerHost.includes('vk.ru')) {
         trafficSource = 'VK';
     } else if (referrerHost.includes('yandex.')) {
-        trafficSource = 'Яндекс Поиск';
+        trafficSource = '\u042f\u043d\u0434\u0435\u043a\u0441 \u043f\u043e\u0438\u0441\u043a';
     } else if (referrerHost.includes('google.')) {
-        trafficSource = 'Google Поиск';
+        trafficSource = 'Google \u043f\u043e\u0438\u0441\u043a';
     } else if (referrerHost) {
-        trafficSource = 'Другой сайт: ' + referrerHost;
+        trafficSource = '\u0414\u0440\u0443\u0433\u043e\u0439 \u0441\u0430\u0439\u0442: ' + referrerHost;
     }
 
     sessionStorage.setItem('trafficSource', trafficSource);
 }
-
 function calculateAge(dateText) {
     if (!dateText) return '';
     const match = dateText.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
@@ -140,6 +156,9 @@ function showFormMessage(form, type, title, text) {
 
     box.className = 'form-result is-' + type;
     box.innerHTML = '<strong>' + title + '</strong><span>' + text + '</span>';
+    if (type === 'success' && form.closest('#modal-backdrop')) {
+        box.innerHTML += '<button type="button" class="form-result-close" onclick="closeModal()">Закрыть</button>';
+    }
     box.classList.remove('hidden');
 }
 
@@ -284,14 +303,35 @@ async function submitLead(form, source) {
         throw new Error('Укажите корректный номер телефона.');
     }
 
-    await fetch(GOOGLE_SHEETS_ENDPOINT, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-            'Content-Type': 'text/plain;charset=utf-8',
-        },
-        body: JSON.stringify(payload),
-    });
+    const payloadText = JSON.stringify(payload);
+    if (navigator.sendBeacon) {
+        const queued = navigator.sendBeacon(
+            GOOGLE_SHEETS_ENDPOINT,
+            new Blob([payloadText], { type: 'text/plain;charset=utf-8' })
+        );
+        if (queued) return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), LEAD_SUBMIT_TIMEOUT_MS);
+
+    try {
+        await fetch(GOOGLE_SHEETS_ENDPOINT, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8',
+            },
+            body: payloadText,
+            keepalive: true,
+            signal: controller.signal,
+        });
+    } catch (error) {
+        if (error.name === 'AbortError') return;
+        throw error;
+    } finally {
+        window.clearTimeout(timeoutId);
+    }
 }
 
 function setupPhoneInputs() {
@@ -344,11 +384,23 @@ function toggleMobileMenu() {
     document.getElementById('mobile-menu').classList.toggle('hidden');
 }
 
+function setModalJobValue(value) {
+    const field = document.getElementById('modal-job-input');
+    if (!field) return;
+
+    const hasOption = Array.from(field.options || []).some((option) => option.value === value);
+    if (!hasOption && value) {
+        field.add(new Option(value, value));
+    }
+    field.value = value;
+}
+
 function openModal(title = 'Заказать звонок') {
     trackVkGoal('lead_open');
     document.getElementById('modal-backdrop').classList.remove('hidden');
     document.getElementById('modal-title').textContent = title;
-    document.getElementById('modal-job-input').value = 'Индивидуальный подбор';
+    document.getElementById('modal-subtitle').textContent = 'Оставьте контакты для согласования даты выезда и бронирования билетов.';
+    setModalJobValue('Индивидуальный подбор');
     document.getElementById('modal-calc-data').value = '';
     window.renderRecaptchas();
 }
@@ -358,13 +410,35 @@ function openModalWithPrefill(jobTitle, salary) {
     document.getElementById('modal-backdrop').classList.remove('hidden');
     document.getElementById('modal-title').textContent = 'Отклик: ' + jobTitle;
     document.getElementById('modal-subtitle').textContent = 'Ставка: ' + salary + '. Координатор свяжется для согласования билетов.';
-    document.getElementById('modal-job-input').value = jobTitle;
+    setModalJobValue(jobTitle);
     document.getElementById('modal-calc-data').value = salary;
     window.renderRecaptchas();
 }
 
 function closeModal() {
-    document.getElementById('modal-backdrop').classList.add('hidden');
+    const backdrop = document.getElementById('modal-backdrop');
+    const form = backdrop.querySelector('form');
+    backdrop.classList.add('hidden');
+    if (form) {
+        clearFormMessage(form);
+        setFormPending(form, false);
+        resetCaptcha(form);
+    }
+}
+
+function setupModalControls() {
+    const backdrop = document.getElementById('modal-backdrop');
+    if (!backdrop) return;
+
+    backdrop.addEventListener('click', (event) => {
+        if (event.target === backdrop) closeModal();
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !backdrop.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
 }
 
 function filterVacancies(category) {
@@ -405,7 +479,7 @@ function handleCalcApply() {
     document.getElementById('modal-backdrop').classList.remove('hidden');
     document.getElementById('modal-title').textContent = 'Бронирование ставки: ' + total;
     document.getElementById('modal-subtitle').textContent = 'Расчет на вахту ' + days + ' дней (' + profName + ').';
-    document.getElementById('modal-job-input').value = profName;
+    setModalJobValue(profName);
     document.getElementById('modal-calc-data').value = 'Вахта: ' + days + ' дн., Расчет: ' + total;
     window.renderRecaptchas();
 }

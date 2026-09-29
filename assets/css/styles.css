@@ -143,6 +143,24 @@ body { font-family: 'Inter', sans-serif; }
     overflow: hidden;
 }
 
+input,
+select,
+textarea {
+    color-scheme: dark;
+}
+
+input.bg-slate-800,
+select.bg-slate-800,
+select.bg-slate-900,
+textarea.bg-slate-800 {
+    color: #fff !important;
+}
+
+select option {
+    color: #111827;
+    background: #fff;
+}
+
 .form-result {
     width: 100%;
     margin-top: 1.75rem !important;
@@ -161,6 +179,24 @@ body { font-family: 'Inter', sans-serif; }
     margin-bottom: 0.2rem;
     color: #fff;
     font-weight: 800;
+}
+
+.form-result span {
+    color: #e2e8f0;
+}
+
+.form-result-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.8rem;
+    min-height: 2.4rem;
+    padding: 0.55rem 1rem;
+    border-radius: 0.75rem;
+    color: #06281c;
+    background: #34d399;
+    font-weight: 800;
+    line-height: 1;
 }
 
 .form-result.is-success {

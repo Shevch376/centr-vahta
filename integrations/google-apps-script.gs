@@ -7,25 +7,27 @@ function doPost(e) {
     return jsonResponse({ success: false, message: 'Лист не найден' });
   }
 
-  ensureTrafficSourceColumn(sheet);
+  ensureHeaders(sheet);
   const data = parsePayload(e);
 
-  sheet.appendRow([
-    data.submittedAt || formatMoscowDate(new Date()),
-    asText(data.phone),
-    data.name || '',
-    data.vacancy || '',
-    data.city || '',
-    data.age || '',
-    data.trafficSource || '',
-    '',
-    ''
-  ]);
+  const headers = getHeaders(sheet);
+  const row = new Array(headers.length).fill('');
+
+  setCell(row, headers, ['дата отклика (+ время мск)', 'дата отклика', 'дата'], data.submittedAt || formatMoscowDate(new Date()));
+  setCell(row, headers, ['телефон соискателя', 'телефон'], asText(data.phone));
+  setCell(row, headers, ['фио соискателя', 'фио', 'имя'], data.name || '');
+  setCell(row, headers, ['название вакансии', 'вакансия'], data.vacancy || '');
+  setCell(row, headers, ['город вакансии', 'город проживания', 'город'], data.city || '');
+  setCell(row, headers, ['возраст'], data.age || '');
+  setCell(row, headers, ['источник перехода', 'источник'], data.trafficSource || '');
+
+  // Статус и оператор намеренно не заполняются сайтом: эти поля ведутся вручную.
+  sheet.appendRow(row);
 
   return jsonResponse({ success: true });
 }
 
-function ensureTrafficSourceColumn(sheet) {
+function ensureHeaders(sheet) {
   const headerRange = sheet.getRange(1, 1, 1, sheet.getLastColumn());
   const headers = headerRange.getValues()[0].map(function (value) {
     return String(value).trim().toLowerCase();
@@ -43,6 +45,22 @@ function ensureTrafficSourceColumn(sheet) {
   }
 
   sheet.getRange(1, sheet.getLastColumn() + 1).setValue('Источник перехода');
+}
+
+function getHeaders(sheet) {
+  return sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0].map(function (value) {
+    return String(value).trim().toLowerCase();
+  });
+}
+
+function setCell(row, headers, names, value) {
+  for (let i = 0; i < names.length; i += 1) {
+    const index = headers.indexOf(names[i]);
+    if (index !== -1) {
+      row[index] = value;
+      return;
+    }
+  }
 }
 
 function parsePayload(e) {
