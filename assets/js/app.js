@@ -156,10 +156,21 @@ function showFormMessage(form, type, title, text) {
 
     box.className = 'form-result is-' + type;
     box.innerHTML = '<strong>' + title + '</strong><span>' + text + '</span>';
-    if (type === 'success' && form.closest('#modal-backdrop')) {
-        box.innerHTML += '<button type="button" class="form-result-close" onclick="closeModal()">Закрыть</button>';
+    if (type === 'success') {
+        if (form.closest('#modal-backdrop')) {
+            box.innerHTML += '<button type="button" class="form-result-close" onclick="closeModal()">Закрыть</button>';
+        } else {
+            box.innerHTML += '<button type="button" class="form-result-dismiss" onclick="dismissFormMessage(this)" aria-label="Закрыть сообщение">×</button>';
+        }
     }
     box.classList.remove('hidden');
+}
+
+function dismissFormMessage(button) {
+    const box = button.closest('.form-result');
+    if (!box) return;
+    box.className = 'form-result hidden';
+    box.innerHTML = '';
 }
 
 function clearFormMessage(form) {
