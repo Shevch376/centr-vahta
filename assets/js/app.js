@@ -29,17 +29,26 @@ function getStoredTrafficSource() {
 }
 
 function saveTrafficSource() {
-    if (getStoredTrafficSource()) return;
+    sessionStorage.setItem('trafficSource', detectTrafficSource());
+}
 
+function detectTrafficSource() {
     const params = new URLSearchParams(window.location.search);
     const utmSource = (params.get('utm_source') || '').toLowerCase();
     const referrer = document.referrer || '';
     let referrerHost = '';
+    let currentHost = '';
 
     try {
         referrerHost = referrer ? new URL(referrer).hostname.toLowerCase() : '';
     } catch (error) {
         referrerHost = '';
+    }
+
+    try {
+        currentHost = window.location.hostname.toLowerCase();
+    } catch (error) {
+        currentHost = '';
     }
 
     let trafficSource = '\u041f\u0440\u044f\u043c\u043e\u0439 \u0437\u0430\u0445\u043e\u0434';
@@ -58,11 +67,11 @@ function saveTrafficSource() {
         trafficSource = '\u042f\u043d\u0434\u0435\u043a\u0441 \u043f\u043e\u0438\u0441\u043a';
     } else if (referrerHost.includes('google.')) {
         trafficSource = 'Google \u043f\u043e\u0438\u0441\u043a';
-    } else if (referrerHost) {
+    } else if (referrerHost && referrerHost !== currentHost) {
         trafficSource = '\u0414\u0440\u0443\u0433\u043e\u0439 \u0441\u0430\u0439\u0442: ' + referrerHost;
     }
 
-    sessionStorage.setItem('trafficSource', trafficSource);
+    return trafficSource;
 }
 function calculateAge(dateText) {
     if (!dateText) return '';
