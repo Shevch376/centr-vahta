@@ -23,14 +23,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        window.recaptchaOnload = function () {
-            if (window.renderRecaptchas) {
-                window.renderRecaptchas();
-            }
-        };
-    </script>
-    <script src="https://www.google.com/recaptcha/api.js?onload=recaptchaOnload&render=explicit" async defer></script>
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){
@@ -56,7 +48,7 @@
         })(document, window, "tmr-code");
     </script>
     <!-- /Top.Mail.Ru / VK Ads counter -->
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/styles.css?v=20260930-01">
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased">
     <noscript><div><img src="https://mc.yandex.ru/watch/113130698" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
@@ -185,8 +177,6 @@
                                     <option>Разнорабочий / Другая профессия</option>
                                 </select>
                             </div>
-
-                            <div class="recaptcha-box g-recaptcha" data-sitekey="6LeaN9QtAAAAAK9JhDr5-mPwB26VghVpk-wmYrq0"></div>
 
                             <button type="submit" class="w-full bg-brand-accent hover:bg-brand-accentHover text-slate-950 font-heading text-lg font-bold py-3.5 px-6 rounded-lg transition-all shadow-lg flex items-center justify-center space-x-2">
                                 <span>Подобрать объект</span>
@@ -556,7 +546,6 @@
                         </div>
                         <span class="leading-tight group-hover:text-slate-300 transition-colors">Даю согласие на получение звонка по указанному номеру для подбора вакансии</span>
                     </label>
-                    <div class="recaptcha-box g-recaptcha" data-sitekey="6LeaN9QtAAAAAK9JhDr5-mPwB26VghVpk-wmYrq0"></div>
                 </div>
 
                 <div class="pt-4 text-center relative z-10">
@@ -640,7 +629,6 @@
                         <input type="checkbox" required checked class="mt-0.5 rounded bg-slate-800 border-slate-700 text-brand-accent focus:ring-0">
                         <span>Согласие на получение звонка координатора</span>
                     </label>
-                    <div class="recaptcha-box g-recaptcha" data-sitekey="6LeaN9QtAAAAAK9JhDr5-mPwB26VghVpk-wmYrq0"></div>
                 </div>
 
                 <button type="submit" class="w-full bg-brand-accent hover:bg-brand-accentHover text-slate-950 font-heading text-lg font-bold py-3.5 rounded-lg transition-all shadow-lg mt-2">
@@ -650,8 +638,12 @@
             </form>
         </div>
     </div>
+    <div id="lead-toast" class="lead-toast hidden" role="status" aria-live="polite">
+        <strong>Заявка отправлена</strong>
+        <span>Ожидайте звонка координатора в течение дня.</span>
+    </div>
 
     <!-- СКРИПТЫ ВЗАИМОДЕЙСТВИЯ -->
-        <script src="assets/js/app.js"></script>
+        <script src="assets/js/app.js?v=20260930-01"></script>
 </body>
 </html>

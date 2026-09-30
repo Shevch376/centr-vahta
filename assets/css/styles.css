@@ -91,33 +91,6 @@ select::selection {
     box-shadow: 0 0.75rem 1.5rem rgba(31, 95, 191, 0.2);
 }
 
-.captcha-check {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    min-height: 3rem;
-    padding: 0.8rem 1rem;
-    color: #dbeafe;
-    background: rgba(15, 23, 42, 0.72);
-    border: 1px solid rgba(148, 163, 184, 0.42);
-    border-radius: 0.8rem;
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.captcha-check input {
-    width: 1.1rem;
-    height: 1.1rem;
-    accent-color: #1f5fbf;
-    cursor: pointer;
-}
-
-.captcha-check-compact {
-    min-height: 2.75rem;
-    padding: 0.7rem 0.85rem;
-}
-
 .section-muted {
     background: #eef2f7;
 }
@@ -146,13 +119,6 @@ select::selection {
     background: #f59e0b;
     border-color: rgba(251, 191, 36, 0.65);
     text-transform: uppercase;
-}
-
-.recaptcha-box {
-    display: flex;
-    justify-content: center;
-    min-height: 78px;
-    overflow: hidden;
 }
 
 input,
@@ -249,6 +215,43 @@ select option {
     background: rgba(120, 53, 15, 0.45);
 }
 
+.lead-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 1.2rem;
+    z-index: 70;
+    width: min(92vw, 28rem);
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(52, 211, 153, 0.55);
+    border-radius: 1rem;
+    color: #ecfdf5;
+    background: rgba(4, 47, 46, 0.94);
+    box-shadow: 0 1.3rem 2.8rem rgba(2, 6, 23, 0.38);
+    transform: translate(-50%, 1.2rem);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.lead-toast.is-visible {
+    transform: translate(-50%, 0);
+    opacity: 1;
+}
+
+.lead-toast strong {
+    display: block;
+    margin-bottom: 0.2rem;
+    color: #fff;
+    font-weight: 900;
+}
+
+.lead-toast span {
+    display: block;
+    color: #d1fae5;
+    font-size: 0.95rem;
+    line-height: 1.35;
+}
+
 html,
 body {
     max-width: 100%;
@@ -300,12 +303,8 @@ body {
         text-overflow: ellipsis;
     }
 
-    .recaptcha-box {
-        justify-content: flex-start;
-        min-height: 72px;
-        transform: scale(.86);
-        transform-origin: left center;
-        width: 304px;
+    .lead-toast {
+        bottom: 0.85rem;
     }
 }
 

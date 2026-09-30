@@ -1,75 +1,15 @@
 lucide.createIcons();
 
-const RECAPTCHA_SITE_KEY = '6LeaN9QtAAAAAK9JhDr5-mPwB26VghVpk-wmYrq0';
 const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyp1qXmvyq-Ev3hNO5f9kUPoZK9vXGj__Ij3q5sHLpHhWY0gU4dDLa98K5Wx1eJuYC3/exec';
-const LEAD_SUBMIT_TIMEOUT_MS = 4500;
-
-window.renderRecaptchas = function renderRecaptchas() {
-    if (!window.grecaptcha) return;
-
-    document.querySelectorAll('.g-recaptcha').forEach((captcha) => {
-        if (captcha.dataset.widgetId) return;
-        if (captcha.closest('.hidden')) return;
-
-        try {
-            const widgetId = window.grecaptcha.render(captcha, {
-                sitekey: RECAPTCHA_SITE_KEY,
-                theme: 'light',
-            });
-            captcha.dataset.widgetId = String(widgetId);
-        } catch (error) {
-            captcha.dataset.widgetError = 'true';
-        }
-    });
-};
+const LEAD_FAST_CONFIRM_MS = 1500;
 
 document.addEventListener('DOMContentLoaded', () => {
     saveTrafficSource();
     setupPhoneInputs();
     setupDateInputs();
     setupModalControls();
-
-    if (window.grecaptcha) {
-        window.renderRecaptchas();
-    }
+    setupLeadOpenTracking();
 });
-
-function validateCaptcha(form) {
-    const captcha = form.querySelector('.g-recaptcha');
-    if (!captcha) return true;
-
-    if (!window.grecaptcha) {
-        showFormMessage(form, 'error', 'Капча еще загружается', 'Подождите пару секунд и попробуйте снова.');
-        return false;
-    }
-
-    if (!captcha.dataset.widgetId) {
-        window.renderRecaptchas();
-    }
-
-    if (!captcha.dataset.widgetId) {
-        showFormMessage(form, 'error', 'Капча еще загружается', 'Подождите пару секунд и попробуйте снова.');
-        return false;
-    }
-
-    const widgetId = Number(captcha.dataset.widgetId);
-    const token = window.grecaptcha.getResponse(widgetId);
-    if (token) return true;
-
-    showFormMessage(form, 'error', 'Подтвердите действие', 'Поставьте галочку «Я не робот», чтобы отправить заявку.');
-    return false;
-}
-
-function resetCaptcha(form) {
-    const captcha = form.querySelector('.g-recaptcha');
-    if (!captcha || !window.grecaptcha || !captcha.dataset.widgetId) return;
-    try {
-        window.grecaptcha.reset(Number(captcha.dataset.widgetId));
-    } catch (error) {
-        delete captcha.dataset.widgetId;
-        window.renderRecaptchas();
-    }
-}
 
 function formatMoscowDate(date = new Date()) {
     return new Intl.DateTimeFormat('ru-RU', {
@@ -178,6 +118,19 @@ function clearFormMessage(form) {
     if (!box) return;
     box.className = 'form-result hidden';
     box.innerHTML = '';
+}
+
+function showLeadToast() {
+    const toast = document.getElementById('lead-toast');
+    if (!toast) return;
+
+    window.clearTimeout(showLeadToast.timer);
+    toast.classList.remove('hidden');
+    toast.classList.add('is-visible');
+    showLeadToast.timer = window.setTimeout(() => {
+        toast.classList.remove('is-visible');
+        window.setTimeout(() => toast.classList.add('hidden'), 250);
+    }, 4200);
 }
 
 function setFormPending(form, isPending) {
@@ -315,19 +268,7 @@ async function submitLead(form, source) {
     }
 
     const payloadText = JSON.stringify(payload);
-    if (navigator.sendBeacon) {
-        const queued = navigator.sendBeacon(
-            GOOGLE_SHEETS_ENDPOINT,
-            new Blob([payloadText], { type: 'text/plain;charset=utf-8' })
-        );
-        if (queued) return;
-    }
-
-    const controller = new AbortController();
-    const timeoutId = window.setTimeout(() => controller.abort(), LEAD_SUBMIT_TIMEOUT_MS);
-
-    try {
-        await fetch(GOOGLE_SHEETS_ENDPOINT, {
+    const request = fetch(GOOGLE_SHEETS_ENDPOINT, {
             method: 'POST',
             mode: 'no-cors',
             headers: {
@@ -335,14 +276,15 @@ async function submitLead(form, source) {
             },
             body: payloadText,
             keepalive: true,
-            signal: controller.signal,
+        })
+        .catch((error) => {
+            console.warn('Lead background submission failed', error);
         });
-    } catch (error) {
-        if (error.name === 'AbortError') return;
-        throw error;
-    } finally {
-        window.clearTimeout(timeoutId);
-    }
+
+    await Promise.race([
+        request,
+        new Promise((resolve) => window.setTimeout(resolve, LEAD_FAST_CONFIRM_MS)),
+    ]);
 }
 
 function setupPhoneInputs() {
@@ -391,6 +333,20 @@ function setupDateInputs() {
     });
 }
 
+function setupLeadOpenTracking() {
+    document.querySelectorAll('form[onsubmit*="handleFormSubmit"], form[onsubmit*="handleBottomFormSubmit"]').forEach((form) => {
+        const trackOnce = () => {
+            if (form.dataset.leadOpenTracked) return;
+            form.dataset.leadOpenTracked = 'true';
+            trackVkGoal('lead_open');
+        };
+
+        form.addEventListener('focusin', trackOnce);
+        form.addEventListener('input', trackOnce);
+        form.addEventListener('change', trackOnce);
+    });
+}
+
 function toggleMobileMenu() {
     document.getElementById('mobile-menu').classList.toggle('hidden');
 }
@@ -413,7 +369,6 @@ function openModal(title = 'Заказать звонок') {
     document.getElementById('modal-subtitle').textContent = 'Оставьте контакты для согласования даты выезда и бронирования билетов.';
     setModalJobValue('Индивидуальный подбор');
     document.getElementById('modal-calc-data').value = '';
-    window.renderRecaptchas();
 }
 
 function openModalWithPrefill(jobTitle, salary) {
@@ -423,7 +378,6 @@ function openModalWithPrefill(jobTitle, salary) {
     document.getElementById('modal-subtitle').textContent = 'Ставка: ' + salary + '. Координатор свяжется для согласования билетов.';
     setModalJobValue(jobTitle);
     document.getElementById('modal-calc-data').value = salary;
-    window.renderRecaptchas();
 }
 
 function closeModal() {
@@ -433,7 +387,6 @@ function closeModal() {
     if (form) {
         clearFormMessage(form);
         setFormPending(form, false);
-        resetCaptcha(form);
     }
 }
 
@@ -492,7 +445,6 @@ function handleCalcApply() {
     document.getElementById('modal-subtitle').textContent = 'Расчет на вахту ' + days + ' дней (' + profName + ').';
     setModalJobValue(profName);
     document.getElementById('modal-calc-data').value = 'Вахта: ' + days + ' дн., Расчет: ' + total;
-    window.renderRecaptchas();
 }
 
 async function handleFormSubmit(e, source = 'Главный экран') {
@@ -500,15 +452,13 @@ async function handleFormSubmit(e, source = 'Главный экран') {
     const form = e.target;
     clearFormMessage(form);
     if (!validateLeadForm(form)) return;
-    if (!validateCaptcha(form)) return;
     try {
         setFormPending(form, true);
-        showFormMessage(form, 'pending', 'Отправляем заявку', 'Подождите несколько секунд, данные передаются координатору.');
         await submitLead(form, source);
         showFormMessage(form, 'success', 'Заявка принята', 'Данные переданы координатору. Мы свяжемся с вами в ближайшее время.');
+        showLeadToast();
         trackLeadGoals('lead_hero');
         form.reset();
-        resetCaptcha(form);
         setupPhoneInputs();
     } catch (error) {
         showFormMessage(form, 'error', 'Заявка не отправлена', error.message || 'Проверьте поля и попробуйте еще раз.');
@@ -522,15 +472,13 @@ async function handleBottomFormSubmit(e) {
     const form = e.target;
     clearFormMessage(form);
     if (!validateLeadForm(form)) return;
-    if (!validateCaptcha(form)) return;
     try {
         setFormPending(form, true);
-        showFormMessage(form, 'pending', 'Отправляем заявку', 'Подождите несколько секунд, данные передаются координатору.');
         await submitLead(form, 'Анкета кандидата');
         showFormMessage(form, 'success', 'Анкета зарегистрирована', 'Координатор свяжется с вами в ближайшее время.');
+        showLeadToast();
         trackLeadGoals('lead_bottom');
         form.reset();
-        resetCaptcha(form);
         setupPhoneInputs();
     } catch (error) {
         showFormMessage(form, 'error', 'Анкета не отправлена', error.message || 'Проверьте поля и попробуйте еще раз.');
@@ -544,16 +492,14 @@ async function handleModalSubmit(e) {
     const form = e.target;
     clearFormMessage(form);
     if (!validateLeadForm(form)) return;
-    if (!validateCaptcha(form)) return;
     try {
         setFormPending(form, true);
-        showFormMessage(form, 'pending', 'Отправляем анкету', 'Подождите несколько секунд, данные передаются координатору.');
         await submitLead(form, 'Модальное окно');
-        showFormMessage(form, 'success', 'Анкета отправлена', 'Мы свяжемся с вами в течение рабочего дня.');
         trackLeadGoals('lead_modal');
         form.reset();
-        resetCaptcha(form);
         setupPhoneInputs();
+        closeModal();
+        showLeadToast();
     } catch (error) {
         showFormMessage(form, 'error', 'Анкета не отправлена', error.message || 'Проверьте поля и попробуйте еще раз.');
     } finally {
