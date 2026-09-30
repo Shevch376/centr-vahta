@@ -4,6 +4,8 @@ AddType "text/css; charset=UTF-8" .css
 AddType "application/javascript; charset=UTF-8" .js
 AddType "text/plain; charset=UTF-8" .txt
 AddType "application/xml; charset=UTF-8" .xml
+AddType "application/manifest+json; charset=UTF-8" .webmanifest
+AddType "image/x-icon" .ico
 
 RewriteEngine On
 RewriteCond %{HTTPS} !=on [OR]
