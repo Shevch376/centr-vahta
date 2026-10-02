@@ -159,9 +159,40 @@ function setFormPending(form, isPending) {
     }
 }
 
+function normalizePhoneDigits(value) {
+    let digits = value.replace(/\D/g, '');
+
+    if (digits.length > 11 && digits.startsWith('77')) {
+        digits = digits.slice(1);
+    }
+
+    if (digits[0] === '8') {
+        digits = '7' + digits.slice(1);
+    } else if (digits && digits[0] !== '7') {
+        digits = '7' + digits;
+    }
+
+    return digits.slice(0, 11);
+}
+
+function formatPhoneValue(value) {
+    const digits = normalizePhoneDigits(value);
+    if (!digits) return '';
+
+    const country = digits[0] === '8' ? '7' : digits[0];
+    const rest = digits.slice(1);
+    const parts = ['+' + country];
+
+    if (rest.slice(0, 3)) parts.push(' ' + rest.slice(0, 3));
+    if (rest.slice(3, 6)) parts.push(' ' + rest.slice(3, 6));
+    if (rest.slice(6, 8)) parts.push('-' + rest.slice(6, 8));
+    if (rest.slice(8, 10)) parts.push('-' + rest.slice(8, 10));
+
+    return parts.join('');
+}
+
 function isValidPhone(value) {
-    const digits = value.replace(/\D/g, '');
-    return digits.length >= 11 && digits.length <= 12;
+    return normalizePhoneDigits(value).length === 11;
 }
 
 function isValidDateText(value) {
@@ -298,33 +329,10 @@ async function submitLead(form, source) {
 
 function setupPhoneInputs() {
     document.querySelectorAll('.phone-input').forEach((input) => {
-        if (!input.value.trim()) input.value = '+7 ';
         input.maxLength = 18;
 
-        input.addEventListener('focus', () => {
-            if (!input.value.trim()) input.value = '+7 ';
-        });
-
         input.addEventListener('input', () => {
-            const startsWithPlus = input.value.trim().startsWith('+');
-            let digits = input.value.replace(/\D/g, '').slice(0, 11);
-
-            if (!digits) {
-                input.value = startsWithPlus ? '+' : '+7 ';
-                return;
-            }
-
-            if (digits[0] === '8') digits = '7' + digits.slice(1);
-            if (digits[0] !== '7' && !startsWithPlus) digits = '7' + digits;
-
-            const country = digits[0] || '7';
-            const rest = digits.slice(1);
-            const parts = ['+' + country];
-            if (rest.slice(0, 3)) parts.push(' ' + rest.slice(0, 3));
-            if (rest.slice(3, 6)) parts.push(' ' + rest.slice(3, 6));
-            if (rest.slice(6, 8)) parts.push('-' + rest.slice(6, 8));
-            if (rest.slice(8, 10)) parts.push('-' + rest.slice(8, 10));
-            input.value = parts.join('');
+            input.value = formatPhoneValue(input.value);
         });
     });
 }
