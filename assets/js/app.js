@@ -369,8 +369,24 @@ function setModalJobValue(value) {
     field.value = value;
 }
 
+function resetModalForm() {
+    const backdrop = document.getElementById('modal-backdrop');
+    if (!backdrop) return;
+
+    const form = backdrop.querySelector('form');
+    if (!form) return;
+
+    form.reset();
+    clearFormMessage(form);
+    setFormPending(form, false);
+
+    const calcData = document.getElementById('modal-calc-data');
+    if (calcData) calcData.value = '';
+}
+
 function openModal(title = 'Заказать звонок') {
     trackVkGoal('lead_open');
+    resetModalForm();
     document.getElementById('modal-backdrop').classList.remove('hidden');
     document.getElementById('modal-title').textContent = title;
     document.getElementById('modal-subtitle').textContent = 'Оставьте контакты для согласования даты выезда и бронирования билетов.';
@@ -380,6 +396,7 @@ function openModal(title = 'Заказать звонок') {
 
 function openModalWithPrefill(jobTitle, salary) {
     trackVkGoal('lead_open');
+    resetModalForm();
     document.getElementById('modal-backdrop').classList.remove('hidden');
     document.getElementById('modal-title').textContent = 'Отклик: ' + jobTitle;
     document.getElementById('modal-subtitle').textContent = 'Ставка: ' + salary + '. Координатор свяжется для согласования билетов.';
@@ -389,12 +406,8 @@ function openModalWithPrefill(jobTitle, salary) {
 
 function closeModal() {
     const backdrop = document.getElementById('modal-backdrop');
-    const form = backdrop.querySelector('form');
     backdrop.classList.add('hidden');
-    if (form) {
-        clearFormMessage(form);
-        setFormPending(form, false);
-    }
+    resetModalForm();
 }
 
 function setupModalControls() {
@@ -447,6 +460,7 @@ function handleCalcApply() {
 
     const total = document.getElementById('total-income').textContent;
 
+    resetModalForm();
     document.getElementById('modal-backdrop').classList.remove('hidden');
     document.getElementById('modal-title').textContent = 'Бронирование ставки: ' + total;
     document.getElementById('modal-subtitle').textContent = 'Расчет на вахту ' + days + ' дней (' + profName + ').';
