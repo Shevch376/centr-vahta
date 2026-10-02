@@ -180,6 +180,26 @@ function formatPhoneValue(value) {
     return parts.join('').trim();
 }
 
+function countDigitsBeforeCursor(value, cursorPosition) {
+    return value.slice(0, cursorPosition).replace(/\D/g, '').length;
+}
+
+function getCursorPositionByDigitCount(value, digitCount) {
+    if (digitCount <= 0) return 0;
+
+    let seenDigits = 0;
+    for (let index = 0; index < value.length; index += 1) {
+        if (/\d/.test(value[index])) {
+            seenDigits += 1;
+        }
+        if (seenDigits >= digitCount) {
+            return index + 1;
+        }
+    }
+
+    return value.length;
+}
+
 function isValidPhone(value) {
     const digits = normalizePhoneDigits(value);
     return digits.length === 10 || (digits.length === 11 && (digits[0] === '7' || digits[0] === '8'));
@@ -322,7 +342,13 @@ function setupPhoneInputs() {
         input.maxLength = 18;
 
         input.addEventListener('input', () => {
-            input.value = formatPhoneValue(input.value);
+            const cursorPosition = input.selectionStart || 0;
+            const digitCount = countDigitsBeforeCursor(input.value, cursorPosition);
+            const formattedValue = formatPhoneValue(input.value);
+            const nextCursorPosition = getCursorPositionByDigitCount(formattedValue, digitCount);
+
+            input.value = formattedValue;
+            input.setSelectionRange(nextCursorPosition, nextCursorPosition);
         });
     });
 }
