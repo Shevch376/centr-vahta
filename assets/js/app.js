@@ -160,39 +160,29 @@ function setFormPending(form, isPending) {
 }
 
 function normalizePhoneDigits(value) {
-    let digits = value.replace(/\D/g, '');
-
-    if (digits.length > 11 && digits.startsWith('77')) {
-        digits = digits.slice(1);
-    }
-
-    if (digits[0] === '8') {
-        digits = '7' + digits.slice(1);
-    } else if (digits && digits[0] !== '7') {
-        digits = '7' + digits;
-    }
-
-    return digits.slice(0, 11);
+    return value.replace(/\D/g, '').slice(0, 11);
 }
 
 function formatPhoneValue(value) {
     const digits = normalizePhoneDigits(value);
     if (!digits) return '';
 
-    const country = digits[0] === '8' ? '7' : digits[0];
-    const rest = digits.slice(1);
-    const parts = ['+' + country];
+    const hasCountryCode = digits.length > 10 && (digits[0] === '7' || digits[0] === '8');
+    const prefix = hasCountryCode ? digits[0] : '';
+    const rest = hasCountryCode ? digits.slice(1) : digits;
+    const parts = prefix ? [prefix] : [];
 
     if (rest.slice(0, 3)) parts.push(' ' + rest.slice(0, 3));
     if (rest.slice(3, 6)) parts.push(' ' + rest.slice(3, 6));
     if (rest.slice(6, 8)) parts.push('-' + rest.slice(6, 8));
     if (rest.slice(8, 10)) parts.push('-' + rest.slice(8, 10));
 
-    return parts.join('');
+    return parts.join('').trim();
 }
 
 function isValidPhone(value) {
-    return normalizePhoneDigits(value).length === 11;
+    const digits = normalizePhoneDigits(value);
+    return digits.length === 10 || (digits.length === 11 && (digits[0] === '7' || digits[0] === '8'));
 }
 
 function isValidDateText(value) {
