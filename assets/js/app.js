@@ -1,6 +1,6 @@
 lucide.createIcons();
 
-const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyp1qXmvyq-Ev3hNO5f9kUPoZK9vXGj__Ij3q5sHLpHhWY0gU4dDLa98K5Wx1eJuYC3/exec';
+const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbw9cC5ZFoS7hJ7c6XvcdY3T4BWNaSBp5XwEuVw_f6t9AnCcJFhPHHDuDFc92CfChsce/exec';
 const LEAD_FAST_CONFIRM_MS = 1500;
 
 document.addEventListener('DOMContentLoaded', () => {
